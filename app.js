@@ -313,7 +313,7 @@ function playersHTML() {
 
 function render() {
   const g = S.game;
-  $("#heroName").textContent = g && g.name ? g.name : "құпия санта";
+  $("#heroName").textContent = g && g.name ? g.name : "Құпия Санта";
   $("#heroSub").textContent = g ? ("Сыйлық " + fmtMoney(g.budget, g.currency) + " · жеребе " + fmtDate(g.drawDate) + " · сыйлық беру " + fmtDate(g.giftDate))
     : "Достарыңызбен, әріптестеріңізбен немесе отбасыңызбен ойнаңыз";
   $("#signCount").textContent = S.membersVisible ? S.members.length : (g ? "?" : "0");
@@ -579,24 +579,141 @@ document.addEventListener("click", async e => {
   if (id === "btnDelete") { $("#dangerConfirm").innerHTML = confirmHTML("delete", "Ойын, барлық қатысушы мен жеребе өшіріледі. Бұл әрекетті қайтару мүмкін емес.", "Иә, өшіру"); return; }
 });
 
-/* ---------- falling snow ---------- */
-(function snow() {
+/* ---------- sky lanterns rising, sakura petals drifting ---------- */
+(function sky() {
   const c = $("#snow"), x = c.getContext && c.getContext("2d"); if (!x) return;
+  const host = c.parentElement;
   const still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let W, H, flakes = [];
+  let W, H, lanterns = [], petals = [];
+  const lantern = (y) => ({ x: Math.random() * W, y: y ?? H + Math.random() * H * .5, s: .18 + Math.random() * .35, w: 7 + Math.random() * 9, ph: Math.random() * 6.28, fl: Math.random() * 6.28 });
+  const petal = (y) => ({ x: Math.random() * W, y: y ?? -10, s: .35 + Math.random() * .6, r: 3 + Math.random() * 3, a: Math.random() * 6.28, sp: (Math.random() - .5) * .04, ph: Math.random() * 6.28 });
   const size = () => {
-    const d = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; x.setTransform(d, 0, 0, d, 0, 0);
-    const n = Math.round(Math.min(140, W * H / 9000)); flakes = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, r: .8 + Math.random() * 2.4, s: .3 + Math.random() * .9, w: Math.random() * 6.28 }));
+    const d = Math.min(2, window.devicePixelRatio || 1); const b = host.getBoundingClientRect();
+    W = b.width; H = b.height; c.width = W * d; c.height = H * d; x.setTransform(d, 0, 0, d, 0, 0);
+    lanterns = Array.from({ length: Math.round(Math.min(26, W / 50)) }, () => lantern(Math.random() * H));
+    petals = Array.from({ length: Math.round(Math.min(34, W / 36)) }, () => petal(Math.random() * H));
   };
-  const draw = () => {
-    x.clearRect(0, 0, W, H); x.fillStyle = "rgba(255,255,255,.85)";
-    for (const f of flakes) {
-      x.beginPath(); x.arc(f.x, f.y, f.r, 0, 6.283); x.fill();
-      if (!still) { f.y += f.s; f.w += .01; f.x += Math.sin(f.w) * .35; if (f.y > H + 4) { f.y = -4; f.x = Math.random() * W; } }
+  const drawLantern = l => {
+    const fl = .75 + Math.sin(l.fl) * .25, w = l.w, h = w * 1.25;
+    const g = x.createRadialGradient(l.x, l.y, 0, l.x, l.y, w * 3);
+    g.addColorStop(0, `rgba(255,190,90,${.35 * fl})`); g.addColorStop(1, "rgba(255,150,60,0)");
+    x.fillStyle = g; x.beginPath(); x.arc(l.x, l.y, w * 3, 0, 6.283); x.fill();
+    x.fillStyle = `rgba(255,${170 + 40 * fl | 0},90,.95)`;
+    x.beginPath(); x.moveTo(l.x - w * .5, l.y - h * .5); x.lineTo(l.x + w * .5, l.y - h * .5); x.lineTo(l.x + w * .38, l.y + h * .5); x.lineTo(l.x - w * .38, l.y + h * .5); x.closePath(); x.fill();
+    x.fillStyle = "rgba(255,245,210,.9)"; x.fillRect(l.x - w * .2, l.y + h * .3, w * .4, h * .14);
+  };
+  const drawPetal = p => {
+    x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = "rgba(246,170,195,.85)";
+    x.beginPath(); x.ellipse(0, 0, p.r, p.r * .55, 0, 0, 6.283); x.fill();
+    x.fillStyle = "rgba(255,225,235,.7)"; x.beginPath(); x.ellipse(-p.r * .3, 0, p.r * .4, p.r * .22, 0, 0, 6.283); x.fill(); x.restore();
+  };
+  const frame = () => {
+    x.clearRect(0, 0, W, H);
+    for (const l of lanterns) {
+      drawLantern(l);
+      if (!still) { l.y -= l.s; l.ph += .008; l.fl += .08; l.x += Math.sin(l.ph) * .25; if (l.y < -40) Object.assign(l, lantern()); }
     }
-    if (!still) requestAnimationFrame(draw);
+    for (const p of petals) {
+      drawPetal(p);
+      if (!still) { p.y += p.s; p.ph += .02; p.x += Math.sin(p.ph) * .6 + .25; p.a += p.sp; if (p.y > H + 10 || p.x > W + 10) Object.assign(p, petal()); }
+    }
+    if (!still) requestAnimationFrame(frame);
   };
-  size(); addEventListener("resize", size); draw();
+  size(); if (window.ResizeObserver) new ResizeObserver(size).observe(host); else addEventListener("resize", size); frame();
+})();
+
+/* ---------- music: music.mp3 if present, otherwise an original pentatonic tune made in the browser ---------- */
+const Music = (() => {
+  let ctx = null, master = null, echo = null, timer = null, step = 0, on = false;
+  let audioEl = null, fileState = "unknown";
+  const btn = $("#btnMusic"), label = $("#musicLabel");
+  const D4 = 293.66, SCALE = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
+  const hz = (semi, oct = 0) => D4 * Math.pow(2, (semi + oct * 12) / 12);
+  let phrase = [], idx = 3;
+
+  async function hasFile() {
+    if (fileState !== "unknown") return fileState === "yes";
+    try { const r = await fetch("music.mp3", { method: "HEAD", cache: "no-store" }); fileState = r.ok && /audio/.test(r.headers.get("content-type") || "") ? "yes" : "no"; }
+    catch (_) { fileState = "no"; }
+    return fileState === "yes";
+  }
+  function setup() {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+    const d = ctx.createDelay(1); d.delayTime.value = .36;
+    const fb = ctx.createGain(); fb.gain.value = .33;
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2200;
+    echo = ctx.createGain(); echo.gain.value = .35;
+    echo.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(master);
+  }
+  function pluck(f, t, vol, dur) {           // koto / qanun-like pluck
+    [[1, "triangle", vol], [2, "sine", vol * .35], [3, "sine", vol * .12]].forEach(([m, type, v]) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type; o.frequency.value = f * m;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .008); g.gain.exponentialRampToValueAtTime(.0001, t + dur / m);
+      o.connect(g); g.connect(master); g.connect(echo); o.start(t); o.stop(t + dur + .1);
+    });
+  }
+  function bell(f, t) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "sine"; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + 3.2);
+    o.connect(g); g.connect(master); g.connect(echo); o.start(t); o.stop(t + 3.3);
+  }
+  function drone(t) {
+    [hz(0, -2), hz(7, -2)].forEach(f => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "sine"; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t + .8); g.gain.linearRampToValueAtTime(0, t + 5.4);
+      o.connect(g); g.connect(master); o.start(t); o.stop(t + 5.5);
+    });
+  }
+  function drum(t, low) {                      // soft frame drum: dum / tek
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(low ? 110 : 220, t); o.frequency.exponentialRampToValueAtTime(low ? 55 : 140, t + .12);
+    g.gain.setValueAtTime(low ? .16 : .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + (low ? .3 : .12));
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + .35);
+  }
+  function newPhrase() {
+    phrase = [];
+    for (let i = 0; i < 8; i++) {
+      idx = Math.max(0, Math.min(SCALE.length - 1, idx + [-2, -1, -1, 0, 1, 1, 2][rnd(7)]));
+      phrase.push(rnd(5) === 0 ? null : SCALE[idx]);
+    }
+    phrase[7] = rnd(2) ? SCALE[0] : SCALE[4];
+  }
+  const BEAT = .3, DRUMS = { 0: 1, 3: 0, 4: 1, 6: 0 };   // maqsum-like: dum . . tek dum . tek .
+  function tick() {
+    const t = ctx.currentTime + .05, s = step % 32, n = s % 8;
+    if (s === 0) { newPhrase(); drone(t); }
+    if (s === 16) drone(t);
+    const note = phrase[n];
+    if (note != null && !(s >= 24 && n % 2)) pluck(hz(note), t, .12, 1.4);
+    if (n in DRUMS) drum(t, DRUMS[n] === 1);
+    if (s % 16 === 10) bell(hz(SCALE[rnd(5)], 2), t);
+    step++;
+  }
+  function ui() { btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on)); label.textContent = on ? "Әуенді өшіру" : "Әуенді қосу"; }
+  async function start() {
+    if (await hasFile()) {
+      if (!audioEl) { audioEl = new Audio("music.mp3"); audioEl.loop = true; audioEl.volume = .55; }
+      try { await audioEl.play(); on = true; } catch (_) { on = false; toast("Әуенді қосу мүмкін болмады."); }
+      ui(); return;
+    }
+    if (!ctx) setup();
+    await ctx.resume();
+    master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(.9, ctx.currentTime, .4);
+    if (!timer) { step = 0; timer = setInterval(tick, BEAT * 1000); }
+    on = true; ui();
+  }
+  function stopAll() {
+    if (audioEl) audioEl.pause();
+    if (ctx) { master.gain.setTargetAtTime(0, ctx.currentTime, .25); setTimeout(() => { if (!on && timer) { clearInterval(timer); timer = null; } }, 900); }
+    on = false; ui();
+  }
+  btn.addEventListener("click", () => on ? stopAll() : start());
+  ui();
+  return { start, stop: stopAll };
 })();
 
 /* ---------- boot ---------- */

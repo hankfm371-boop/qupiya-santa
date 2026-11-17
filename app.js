@@ -17,66 +17,75 @@ const rnd = n => crypto.getRandomValues(new Uint32Array(1))[0] % n;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const newId = () => { const A = "abcdefghijkmnpqrstuvwxyz23456789"; let s = ""; for (let i = 0; i < 10; i++) s += A[rnd(A.length)]; return s; };
 
-const SANTA = `<svg viewBox="0 0 240 260" role="img" aria-label="Алтын маска таққан Құпия Санта"><title>Құпия Санта</title>
+const SANTA = `<svg viewBox="0 0 240 260" role="img" aria-label="Қолын бұлғап тұрған Аяз ата"><title>Құпия Санта</title>
 <defs>
-  <linearGradient id="sRobe" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EE4652"/><stop offset=".55" stop-color="#C81E33"/><stop offset="1" stop-color="#8E0F24"/></linearGradient>
-  <linearGradient id="sSleeve" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E23A48"/><stop offset="1" stop-color="#A3142A"/></linearGradient>
-  <linearGradient id="sGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE7A0"/><stop offset=".5" stop-color="#F0C04A"/><stop offset="1" stop-color="#C08A16"/></linearGradient>
-  <radialGradient id="sSkin" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#F1B48F"/></radialGradient>
-  <linearGradient id="sFur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E4E7F2"/></linearGradient>
-  <radialGradient id="sGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFD27A" stop-opacity=".75"/><stop offset="1" stop-color="#FF9A3C" stop-opacity="0"/></radialGradient>
+  <linearGradient id="sCoat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8414C"/><stop offset=".6" stop-color="#C21D2F"/><stop offset="1" stop-color="#8F1022"/></linearGradient>
+  <linearGradient id="sSleeve" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DD3442"/><stop offset="1" stop-color="#A3142A"/></linearGradient>
+  <linearGradient id="sFur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E3E7F1"/></linearGradient>
+  <radialGradient id="sSkin" cx=".42" cy=".38" r=".75"><stop offset="0" stop-color="#FFDCC4"/><stop offset=".7" stop-color="#F4BE9C"/><stop offset="1" stop-color="#E8A882"/></radialGradient>
+  <linearGradient id="sGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE7A0"/><stop offset="1" stop-color="#C99418"/></linearGradient>
+  <linearGradient id="sSack" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A9744A"/><stop offset="1" stop-color="#6E4423"/></linearGradient>
 </defs>
-<ellipse cx="122" cy="255" rx="92" ry="6" fill="#000" opacity=".12"/>
-<!-- robe -->
-<path d="M62 258 Q64 206 86 170 Q120 152 154 170 Q176 206 178 258Z" fill="url(#sRobe)"/>
-<path d="M150 168 Q172 204 176 258 H150 Q154 214 140 170Z" fill="#7E0C20" opacity=".35"/>
-<path d="M62 244 Q120 234 178 244 L178 258 H62Z" fill="url(#sGold)"/>
-<g fill="#C81E33"><path d="M74 251 l4 -4 4 4 -4 4z"/><path d="M92 249 l4 -4 4 4 -4 4z"/><path d="M144 249 l4 -4 4 4 -4 4z"/><path d="M162 251 l4 -4 4 4 -4 4z"/></g>
-<path d="M112 168 Q118 212 110 258 H130 Q122 212 128 168Z" fill="url(#sFur)"/>
-<rect x="68" y="204" width="104" height="13" rx="3" fill="#2A1636"/>
-<rect x="108" y="200" width="24" height="21" rx="5" fill="url(#sGold)"/><rect x="114" y="205" width="12" height="11" rx="2" fill="#2A1636"/>
-<g fill="#F0C04A" opacity=".9"><circle cx="96" cy="230" r="2.4"/><circle cx="144" cy="230" r="2.4"/><circle cx="90" cy="190" r="2"/><circle cx="150" cy="190" r="2"/></g>
-<!-- gift at the feet -->
-<g><rect x="176" y="222" width="42" height="34" rx="4" fill="#178A63"/><rect x="176" y="222" width="42" height="34" rx="4" fill="#000" opacity=".08"/><rect x="193" y="222" width="8" height="34" fill="url(#sGold)"/><rect x="176" y="234" width="42" height="7" fill="url(#sGold)"/><path d="M197 222 q-18 -16 -6 -18 q8 0 6 18 q-2 -18 6 -18 q12 2 -6 18" fill="#F0C04A"/></g>
-<!-- left arm holding a glowing lantern -->
-<circle cx="58" cy="248" r="24" fill="url(#sGlow)"/>
-<path d="M88 178 Q60 194 52 220 L70 226 Q74 204 96 192Z" fill="url(#sSleeve)"/>
-<ellipse cx="60" cy="223" rx="13" ry="8" fill="url(#sFur)" transform="rotate(18 60 223)"/>
-<circle cx="58" cy="230" r="8" fill="#1F6B4F"/>
-<line x1="58" y1="236" x2="58" y2="239" stroke="#C08A16" stroke-width="2"/>
-<rect x="52" y="239" width="12" height="3" rx="1" fill="url(#sGold)"/>
-<ellipse cx="58" cy="250" rx="10" ry="8.5" fill="#E53945"/><path d="M53 243 Q49 250 53 257 M63 243 Q67 250 63 257" stroke="#FFB0A0" stroke-width="1" fill="none" opacity=".7"/>
-<text x="58" y="253.5" text-anchor="middle" font-size="8" fill="#FFE7A0" font-family="serif">福</text>
+<ellipse cx="120" cy="255" rx="98" ry="6" fill="#000" opacity=".14"/>
+<!-- sack over the shoulder, behind the body -->
+<path d="M24 246 Q8 198 30 168 Q44 150 62 148 Q84 150 92 178 Q100 222 84 250Z" fill="url(#sSack)"/>
+<path d="M40 176 q10 12 6 34 M64 168 q10 20 4 46" stroke="#5C381C" stroke-width="2" fill="none" opacity=".45"/>
+<rect x="44" y="134" width="16" height="16" rx="2" fill="#178A63" transform="rotate(-14 52 142)"/><rect x="50" y="134" width="4" height="16" fill="#F0C04A" transform="rotate(-14 52 142)"/>
+<rect x="62" y="132" width="14" height="14" rx="2" fill="#2B5FC9" transform="rotate(10 69 139)"/><rect x="67" y="132" width="4" height="14" fill="#F0C04A" transform="rotate(10 69 139)"/>
+<path d="M48 150 Q62 144 76 150 L74 156 Q62 151 50 156Z" fill="#5C381C"/>
+<!-- coat -->
+<path d="M52 260 Q54 192 80 162 Q120 142 160 162 Q186 192 188 260Z" fill="url(#sCoat)"/>
+<path d="M156 162 Q182 194 186 260 H160 Q162 214 146 168Z" fill="#7A0C1E" opacity=".3"/>
+<path d="M111 160 Q116 210 110 248 H130 Q124 210 129 160Z" fill="url(#sFur)"/>
+<rect x="56" y="210" width="128" height="15" rx="3" fill="#24171F"/>
+<rect x="106" y="206" width="28" height="23" rx="4" fill="url(#sGold)"/><rect x="113" y="212" width="14" height="11" rx="2" fill="#24171F"/>
+<path d="M52 246 Q120 236 188 246 L188 260 H52Z" fill="url(#sFur)"/>
+<!-- left arm holding the sack -->
+<path d="M84 168 Q62 168 58 152 L72 144 Q80 156 96 160Z" fill="url(#sSleeve)"/>
+<ellipse cx="64" cy="148" rx="11" ry="8" fill="url(#sFur)" transform="rotate(-35 64 148)"/>
+<circle cx="60" cy="140" r="8.5" fill="#FFFFFF" stroke="#DADFEA" stroke-width="1"/>
 <!-- right arm waving -->
 <g class="wave">
-  <path d="M152 174 Q186 160 202 122 L222 130 Q212 182 170 198Z" fill="url(#sSleeve)"/>
-  <ellipse cx="211" cy="126" rx="15" ry="9" fill="url(#sFur)" transform="rotate(-30 211 126)"/>
-  <circle cx="214" cy="112" r="12" fill="#1F6B4F"/><path d="M206 106 q-6 -8 -1 -12 q5 -1 6 8" fill="#1F6B4F"/>
+  <path d="M152 170 Q184 160 198 124 L218 132 Q208 182 166 196Z" fill="url(#sSleeve)"/>
+  <ellipse cx="208" cy="128" rx="15" ry="9" fill="url(#sFur)" transform="rotate(-28 208 128)"/>
+  <ellipse cx="212" cy="111" rx="11" ry="13" fill="#FFFFFF" stroke="#DADFEA" stroke-width="1"/>
+  <path d="M202 108 q-7 -4 -6 -10 q5 -2 9 5" fill="#FFFFFF" stroke="#DADFEA" stroke-width="1"/>
+  <path d="M206 100 v-8 M211 99 v-10 M216 100 v-8" stroke="#DADFEA" stroke-width="1.2" stroke-linecap="round"/>
 </g>
 <!-- collar fur -->
-<path d="M84 172 Q120 154 156 172 Q150 186 120 184 Q90 186 84 172Z" fill="url(#sFur)"/>
-<!-- beard -->
-<path d="M84 118 Q76 150 88 176 Q100 204 120 212 Q140 204 152 176 Q164 150 156 118 Q142 140 120 138 Q98 140 84 118Z" fill="url(#sFur)"/>
-<g fill="none" stroke="#D7DCEA" stroke-width="1.6" stroke-linecap="round"><path d="M98 160 q6 8 0 16"/><path d="M110 168 q6 10 0 20"/><path d="M130 168 q-6 10 0 20"/><path d="M142 160 q-6 8 0 16"/><path d="M120 176 q5 10 0 22"/></g>
+<path d="M80 166 Q120 148 160 166 Q152 180 120 178 Q88 180 80 166Z" fill="url(#sFur)"/>
+<!-- hair at the sides -->
+<path d="M90 92 Q80 110 86 130 Q92 122 96 104Z" fill="#F1F3F8"/>
+<path d="M150 92 Q160 110 154 130 Q148 122 144 104Z" fill="#F1F3F8"/>
+<!-- ears -->
+<ellipse cx="93" cy="110" rx="5" ry="8" fill="#EDB08E"/><ellipse cx="147" cy="110" rx="5" ry="8" fill="#EDB08E"/>
 <!-- face -->
-<circle cx="120" cy="112" r="30" fill="url(#sSkin)"/>
-<circle cx="99" cy="126" r="7" fill="#F5907F" opacity=".55"/><circle cx="141" cy="126" r="7" fill="#F5907F" opacity=".55"/>
-<!-- golden masquerade mask -->
-<path d="M86 104 Q102 92 120 103 Q138 92 154 104 Q159 116 148 121 Q134 126 126 117 Q120 112 114 117 Q106 126 92 121 Q81 116 86 104Z" fill="url(#sGold)" stroke="#B57E10" stroke-width="1"/>
-<path d="M86 104 q-12 -4 -16 -14 q8 2 12 8 M154 104 q12 -4 16 -14 q-8 2 -12 8" fill="#F0C04A" stroke="#B57E10" stroke-width="1"/>
-<circle cx="120" cy="101" r="3" fill="#C81E33"/>
-<ellipse class="blink" cx="104" cy="110" rx="6.5" ry="4.8" fill="#2A1636"/><ellipse class="blink" cx="136" cy="110" rx="6.5" ry="4.8" fill="#2A1636"/>
-<circle cx="106" cy="108.5" r="1.7" fill="#fff"/><circle cx="138" cy="108.5" r="1.7" fill="#fff"/>
-<ellipse cx="120" cy="125" rx="7" ry="6" fill="#EE9A86"/><ellipse cx="117.5" cy="122.5" rx="2.2" ry="1.6" fill="#fff" opacity=".6"/>
-<path d="M98 136 q12 -12 22 -3 q10 -9 22 3 q-6 9 -22 4 q-16 5 -22 -4Z" fill="url(#sFur)" stroke="#D7DCEA" stroke-width="1"/>
-<path d="M112 146 q8 6 16 0" stroke="#B5524A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-<!-- hat -->
-<path d="M88 90 Q94 38 140 32 Q186 28 200 72 Q205 90 195 98 L188 80 Q178 58 150 62 L156 88Z" fill="url(#sRobe)"/>
-<path d="M126 44 l2.2 4.6 5 .7 -3.6 3.5 .9 5 -4.5 -2.4 -4.5 2.4 .9 -5 -3.6 -3.5 5 -.7z" fill="url(#sGold)"/>
-<path d="M150 50 l1.4 2.9 3.2 .5 -2.3 2.2 .5 3.2 -2.8 -1.5 -2.8 1.5 .5 -3.2 -2.3 -2.2 3.2 -.5z" fill="#F0C04A" opacity=".8"/>
-<rect x="82" y="80" width="80" height="18" rx="9" fill="url(#sFur)"/>
-<path d="M90 89 q6 -4 12 0 q6 -4 12 0 q6 -4 12 0 q6 -4 12 0 q6 -4 12 0 q6 -4 12 0" stroke="#D7DCEA" stroke-width="1.4" fill="none"/>
-<circle cx="196" cy="100" r="11" fill="url(#sFur)"/><circle cx="193" cy="97" r="4" fill="#fff"/>
+<ellipse cx="120" cy="108" rx="27" ry="29" fill="url(#sSkin)"/>
+<!-- beard -->
+<path d="M90 114 Q84 148 94 172 Q106 196 120 200 Q134 196 146 172 Q156 148 150 114 Q146 132 134 134 Q120 138 106 134 Q94 132 90 114Z" fill="url(#sFur)"/>
+<g fill="none" stroke="#D3D8E6" stroke-width="1.5" stroke-linecap="round"><path d="M100 150 q5 8 0 16"/><path d="M110 160 q5 9 0 18"/><path d="M130 160 q-5 9 0 18"/><path d="M140 150 q-5 8 0 16"/><path d="M120 168 q4 9 0 20"/></g>
+<!-- cheeks -->
+<ellipse cx="102" cy="118" rx="7" ry="5" fill="#F28C7C" opacity=".45"/><ellipse cx="138" cy="118" rx="7" ry="5" fill="#F28C7C" opacity=".45"/>
+<!-- eyebrows -->
+<path d="M100 96 Q108 89 116 95 Q108 93 101 99Z" fill="#FFFFFF" stroke="#D3D8E6" stroke-width=".8"/>
+<path d="M140 96 Q132 89 124 95 Q132 93 139 99Z" fill="#FFFFFF" stroke="#D3D8E6" stroke-width=".8"/>
+<!-- eyes -->
+<g class="blink"><ellipse cx="109" cy="105" rx="3.4" ry="3.8" fill="#3A2318"/><ellipse cx="131" cy="105" rx="3.4" ry="3.8" fill="#3A2318"/></g>
+<circle cx="110.2" cy="103.6" r="1.1" fill="#fff"/><circle cx="132.2" cy="103.6" r="1.1" fill="#fff"/>
+<path d="M101 108 q-3 1 -4 3 M139 108 q3 1 4 3" stroke="#D99A78" stroke-width="1" fill="none" stroke-linecap="round"/>
+<!-- round glasses -->
+<g fill="none" stroke="#C99418" stroke-width="1.6"><circle cx="109" cy="106" r="7.5"/><circle cx="131" cy="106" r="7.5"/><path d="M116.5 105 q3.5 -2 7 0"/><path d="M101.5 104 l-7 -2 M138.5 104 l7 -2"/></g>
+<!-- nose -->
+<ellipse cx="120" cy="117" rx="6" ry="5" fill="#EE9A84"/><ellipse cx="118" cy="115" rx="2" ry="1.4" fill="#fff" opacity=".55"/>
+<!-- mouth and mustache -->
+<path d="M112 131 Q120 138 128 131 Q120 134 112 131Z" fill="#9E3B36"/>
+<path d="M120 122 Q112 118 104 122 Q96 126 92 122 Q96 132 108 130 Q116 129 120 125 Q124 129 132 130 Q144 132 148 122 Q144 126 136 122 Q128 118 120 122Z" fill="url(#sFur)" stroke="#D3D8E6" stroke-width="1"/>
+<!-- hat (flops to the right) -->
+<path d="M92 80 Q94 38 128 34 Q160 32 170 58 Q178 82 166 104 L156 100 Q162 80 152 66 Q144 58 148 80Z" fill="url(#sCoat)"/>
+<path d="M150 64 Q164 72 162 98 L166 104 Q178 82 170 58Z" fill="#7A0C1E" opacity=".3"/>
+<rect x="86" y="74" width="68" height="18" rx="9" fill="url(#sFur)"/>
+<path d="M94 83 q5 -3 10 0 q5 -3 10 0 q5 -3 10 0 q5 -3 10 0 q5 -3 10 0 q5 -3 10 0" stroke="#D3D8E6" stroke-width="1.3" fill="none"/>
+<circle cx="162" cy="110" r="10" fill="url(#sFur)"/><circle cx="159" cy="107" r="3.5" fill="#fff"/>
 </svg>`;
 const GOOGLE = `<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>`;
 

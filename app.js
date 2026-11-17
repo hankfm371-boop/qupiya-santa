@@ -17,30 +17,66 @@ const rnd = n => crypto.getRandomValues(new Uint32Array(1))[0] % n;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const newId = () => { const A = "abcdefghijkmnpqrstuvwxyz23456789"; let s = ""; for (let i = 0; i < 10; i++) s += A[rnd(A.length)]; return s; };
 
-const SANTA = `<svg viewBox="0 0 240 260" role="img" aria-label="Маска таққан Құпия Санта"><title>Құпия Санта</title>
-<ellipse cx="120" cy="256" rx="90" ry="8" fill="#000" opacity=".08"/>
-<path d="M58 260 L70 168 Q120 140 170 168 L182 260Z" fill="#D7362F"/>
-<path d="M120 152 Q150 152 170 168 L182 260 H120Z" fill="#B92A24"/>
-<rect x="64" y="214" width="112" height="16" fill="#2A2A2E"/><rect x="108" y="211" width="24" height="22" rx="4" fill="#F7C948"/><rect x="114" y="216" width="12" height="12" rx="2" fill="#2A2A2E"/>
-<path d="M70 168 Q120 150 170 168 L166 180 Q120 166 74 180Z" fill="#fff"/>
-<g class="wave"><path d="M168 172 Q196 160 206 120 L222 126 Q214 176 176 192Z" fill="#D7362F"/><circle cx="214" cy="116" r="15" fill="#2A2A2E"/><path d="M203 128 l20 6" stroke="#fff" stroke-width="7" stroke-linecap="round"/></g>
-<path d="M74 176 Q50 196 56 226 L74 230 Q70 204 86 190Z" fill="#B92A24"/>
-<rect x="34" y="208" width="46" height="40" rx="5" fill="#2E8B6E"/><rect x="53" y="208" width="8" height="40" fill="#F7C948"/><rect x="34" y="224" width="46" height="8" fill="#F7C948"/><path d="M57 208 q-16 -16 -4 -16 q8 0 4 16 q-4 -16 4 -16 q12 0 -4 16" fill="#F7C948"/>
-<path d="M78 118 Q74 196 120 204 Q166 196 162 118 Q120 140 78 118Z" fill="#fff"/>
-<path d="M86 160 q10 -8 34 -2 q24 -6 34 2 q-10 14 -34 6 q-24 8 -34 -6Z" fill="#F1F1F1"/>
-<circle cx="120" cy="112" r="34" fill="#F6CDB0"/>
-<circle cx="98" cy="128" r="7" fill="#F29B8C" opacity=".8"/><circle cx="142" cy="128" r="7" fill="#F29B8C" opacity=".8"/>
-<path d="M84 104 Q120 92 156 104 L154 120 Q138 112 128 120 Q120 124 112 120 Q102 112 86 120Z" fill="#1E2A44"/>
-<path d="M84 108 L72 102 M156 108 L170 100" stroke="#1E2A44" stroke-width="4" stroke-linecap="round"/>
-<ellipse class="blink" cx="104" cy="111" rx="7" ry="5" fill="#fff"/><ellipse class="blink" cx="136" cy="111" rx="7" ry="5" fill="#fff"/>
-<circle cx="105" cy="112" r="3" fill="#1E2A44"/><circle cx="137" cy="112" r="3" fill="#1E2A44"/>
-<circle cx="120" cy="128" r="7" fill="#EF8F7E"/>
-<path d="M98 140 q12 -10 22 -2 q10 -8 22 2 q-12 8 -22 2 q-10 6 -22 -2Z" fill="#fff"/>
-<path d="M110 150 q10 6 20 0" stroke="#B5524A" stroke-width="3" fill="none" stroke-linecap="round"/>
-<path d="M84 90 Q100 28 156 40 Q190 50 196 92 L176 96 Q170 64 150 66 L156 90Z" fill="#D7362F"/>
-<rect x="80" y="82" width="80" height="18" rx="9" fill="#fff"/>
-<circle cx="194" cy="96" r="12" fill="#fff"/>
-<path d="M78 170 Q120 186 162 170 L160 184 Q120 198 80 184Z" fill="#2E8B6E"/><path d="M92 176 v12 M108 180 v12 M124 181 v12 M140 179 v12 M154 175 v12" stroke="#E5463F" stroke-width="4"/>
+const SANTA = `<svg viewBox="0 0 240 260" role="img" aria-label="Алтын маска таққан Құпия Санта"><title>Құпия Санта</title>
+<defs>
+  <linearGradient id="sRobe" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EE4652"/><stop offset=".55" stop-color="#C81E33"/><stop offset="1" stop-color="#8E0F24"/></linearGradient>
+  <linearGradient id="sSleeve" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E23A48"/><stop offset="1" stop-color="#A3142A"/></linearGradient>
+  <linearGradient id="sGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE7A0"/><stop offset=".5" stop-color="#F0C04A"/><stop offset="1" stop-color="#C08A16"/></linearGradient>
+  <radialGradient id="sSkin" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#FFE3CC"/><stop offset="1" stop-color="#F1B48F"/></radialGradient>
+  <linearGradient id="sFur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E4E7F2"/></linearGradient>
+  <radialGradient id="sGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFD27A" stop-opacity=".75"/><stop offset="1" stop-color="#FF9A3C" stop-opacity="0"/></radialGradient>
+</defs>
+<ellipse cx="122" cy="255" rx="92" ry="6" fill="#000" opacity=".12"/>
+<!-- robe -->
+<path d="M62 258 Q64 206 86 170 Q120 152 154 170 Q176 206 178 258Z" fill="url(#sRobe)"/>
+<path d="M150 168 Q172 204 176 258 H150 Q154 214 140 170Z" fill="#7E0C20" opacity=".35"/>
+<path d="M62 244 Q120 234 178 244 L178 258 H62Z" fill="url(#sGold)"/>
+<g fill="#C81E33"><path d="M74 251 l4 -4 4 4 -4 4z"/><path d="M92 249 l4 -4 4 4 -4 4z"/><path d="M144 249 l4 -4 4 4 -4 4z"/><path d="M162 251 l4 -4 4 4 -4 4z"/></g>
+<path d="M112 168 Q118 212 110 258 H130 Q122 212 128 168Z" fill="url(#sFur)"/>
+<rect x="68" y="204" width="104" height="13" rx="3" fill="#2A1636"/>
+<rect x="108" y="200" width="24" height="21" rx="5" fill="url(#sGold)"/><rect x="114" y="205" width="12" height="11" rx="2" fill="#2A1636"/>
+<g fill="#F0C04A" opacity=".9"><circle cx="96" cy="230" r="2.4"/><circle cx="144" cy="230" r="2.4"/><circle cx="90" cy="190" r="2"/><circle cx="150" cy="190" r="2"/></g>
+<!-- gift at the feet -->
+<g><rect x="176" y="222" width="42" height="34" rx="4" fill="#178A63"/><rect x="176" y="222" width="42" height="34" rx="4" fill="#000" opacity=".08"/><rect x="193" y="222" width="8" height="34" fill="url(#sGold)"/><rect x="176" y="234" width="42" height="7" fill="url(#sGold)"/><path d="M197 222 q-18 -16 -6 -18 q8 0 6 18 q-2 -18 6 -18 q12 2 -6 18" fill="#F0C04A"/></g>
+<!-- left arm holding a glowing lantern -->
+<circle cx="58" cy="248" r="24" fill="url(#sGlow)"/>
+<path d="M88 178 Q60 194 52 220 L70 226 Q74 204 96 192Z" fill="url(#sSleeve)"/>
+<ellipse cx="60" cy="223" rx="13" ry="8" fill="url(#sFur)" transform="rotate(18 60 223)"/>
+<circle cx="58" cy="230" r="8" fill="#1F6B4F"/>
+<line x1="58" y1="236" x2="58" y2="239" stroke="#C08A16" stroke-width="2"/>
+<rect x="52" y="239" width="12" height="3" rx="1" fill="url(#sGold)"/>
+<ellipse cx="58" cy="250" rx="10" ry="8.5" fill="#E53945"/><path d="M53 243 Q49 250 53 257 M63 243 Q67 250 63 257" stroke="#FFB0A0" stroke-width="1" fill="none" opacity=".7"/>
+<text x="58" y="253.5" text-anchor="middle" font-size="8" fill="#FFE7A0" font-family="serif">福</text>
+<!-- right arm waving -->
+<g class="wave">
+  <path d="M152 174 Q186 160 202 122 L222 130 Q212 182 170 198Z" fill="url(#sSleeve)"/>
+  <ellipse cx="211" cy="126" rx="15" ry="9" fill="url(#sFur)" transform="rotate(-30 211 126)"/>
+  <circle cx="214" cy="112" r="12" fill="#1F6B4F"/><path d="M206 106 q-6 -8 -1 -12 q5 -1 6 8" fill="#1F6B4F"/>
+</g>
+<!-- collar fur -->
+<path d="M84 172 Q120 154 156 172 Q150 186 120 184 Q90 186 84 172Z" fill="url(#sFur)"/>
+<!-- beard -->
+<path d="M84 118 Q76 150 88 176 Q100 204 120 212 Q140 204 152 176 Q164 150 156 118 Q142 140 120 138 Q98 140 84 118Z" fill="url(#sFur)"/>
+<g fill="none" stroke="#D7DCEA" stroke-width="1.6" stroke-linecap="round"><path d="M98 160 q6 8 0 16"/><path d="M110 168 q6 10 0 20"/><path d="M130 168 q-6 10 0 20"/><path d="M142 160 q-6 8 0 16"/><path d="M120 176 q5 10 0 22"/></g>
+<!-- face -->
+<circle cx="120" cy="112" r="30" fill="url(#sSkin)"/>
+<circle cx="99" cy="126" r="7" fill="#F5907F" opacity=".55"/><circle cx="141" cy="126" r="7" fill="#F5907F" opacity=".55"/>
+<!-- golden masquerade mask -->
+<path d="M86 104 Q102 92 120 103 Q138 92 154 104 Q159 116 148 121 Q134 126 126 117 Q120 112 114 117 Q106 126 92 121 Q81 116 86 104Z" fill="url(#sGold)" stroke="#B57E10" stroke-width="1"/>
+<path d="M86 104 q-12 -4 -16 -14 q8 2 12 8 M154 104 q12 -4 16 -14 q-8 2 -12 8" fill="#F0C04A" stroke="#B57E10" stroke-width="1"/>
+<circle cx="120" cy="101" r="3" fill="#C81E33"/>
+<ellipse class="blink" cx="104" cy="110" rx="6.5" ry="4.8" fill="#2A1636"/><ellipse class="blink" cx="136" cy="110" rx="6.5" ry="4.8" fill="#2A1636"/>
+<circle cx="106" cy="108.5" r="1.7" fill="#fff"/><circle cx="138" cy="108.5" r="1.7" fill="#fff"/>
+<ellipse cx="120" cy="125" rx="7" ry="6" fill="#EE9A86"/><ellipse cx="117.5" cy="122.5" rx="2.2" ry="1.6" fill="#fff" opacity=".6"/>
+<path d="M98 136 q12 -12 22 -3 q10 -9 22 3 q-6 9 -22 4 q-16 5 -22 -4Z" fill="url(#sFur)" stroke="#D7DCEA" stroke-width="1"/>
+<path d="M112 146 q8 6 16 0" stroke="#B5524A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+<!-- hat -->
+<path d="M88 90 Q94 38 140 32 Q186 28 200 72 Q205 90 195 98 L188 80 Q178 58 150 62 L156 88Z" fill="url(#sRobe)"/>
+<path d="M126 44 l2.2 4.6 5 .7 -3.6 3.5 .9 5 -4.5 -2.4 -4.5 2.4 .9 -5 -3.6 -3.5 5 -.7z" fill="url(#sGold)"/>
+<path d="M150 50 l1.4 2.9 3.2 .5 -2.3 2.2 .5 3.2 -2.8 -1.5 -2.8 1.5 .5 -3.2 -2.3 -2.2 3.2 -.5z" fill="#F0C04A" opacity=".8"/>
+<rect x="82" y="80" width="80" height="18" rx="9" fill="url(#sFur)"/>
+<path d="M90 89 q6 -4 12 0 q6 -4 12 0 q6 -4 12 0 q6 -4 12 0 q6 -4 12 0 q6 -4 12 0" stroke="#D7DCEA" stroke-width="1.4" fill="none"/>
+<circle cx="196" cy="100" r="11" fill="url(#sFur)"/><circle cx="193" cy="97" r="4" fill="#fff"/>
 </svg>`;
 const GOOGLE = `<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>`;
 

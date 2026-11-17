@@ -297,9 +297,8 @@ function stageCore() {
 
 function playersHTML() {
   if (!S.membersVisible) return `<div class="empty">Ойыншылар тізімі ойынға қосылғаннан кейін көрінеді.</div>`;
-  const list = S.members.filter(p => S.filter === "all" || p.gender === S.filter);
+  const list = S.members;
   if (!S.members.length) return `<div class="empty">Әзірге ешкім қосылмады. Бірінші болып қосылыңыз!</div>`;
-  if (!list.length) return `<div class="empty">Бұл сүзгі бойынша ешкім жоқ.</div>`;
   const drawn = S.game && S.game.status === "drawn";
   return list.map(p => {
     const mineRow = p.id === S.uid;
@@ -339,10 +338,6 @@ function render() {
   if (!showCreate && !showJoin) { const st = stageHTML(); $("#statusTitle").textContent = st.t; $("#stage").innerHTML = st.h; }
   if (!$("#playersSec").hidden) {
     $("#pCount").textContent = S.membersVisible ? S.members.length : "";
-    $("#nM").textContent = S.members.filter(p => p.gender === "m").length;
-    $("#nF").textContent = S.members.filter(p => p.gender === "f").length;
-    document.querySelectorAll(".filters button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === S.filter)));
-    document.querySelector(".filters").hidden = !S.membersVisible;
     $("#players").innerHTML = playersHTML();
     $("#btnAddMe").hidden = !(g && isOpen() && S.uid && S.mineReady && !mine);
   }
@@ -557,7 +552,6 @@ document.addEventListener("click", async e => {
   if (id === "btnOpen" || id === "btnOpen2") { S.opened = true; render(); return; }
   if (id === "btnClose") { S.opened = false; render(); return; }
   if (b.dataset.no) { S.confirm = null; $("#dangerConfirm").innerHTML = ""; render(); return; }
-  if (b.dataset.f) { S.filter = b.dataset.f; render(); return; }
   if (b.dataset.yes) {
     const y = b.dataset.yes;
     if (y === "draw" || y === "redraw") { runDraw(); return; }

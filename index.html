@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Құпия Санта — қазақ тіліндегі мерекелік сыйлық алмасу ойыны. Ойын құрып, достарыңызды шақырыңыз, жеребе тартыңыз.">
+<meta name="theme-color" content="#1B2760">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect x=%278%27 y=%2724%27 width=%2748%27 height=%2734%27 rx=%274%27 fill=%27%23FF5E54%27/%3E%3Crect x=%274%27 y=%2716%27 width=%2756%27 height=%2712%27 rx=%273%27 fill=%27%23FF7A70%27/%3E%3Crect x=%2728%27 y=%2716%27 width=%278%27 height=%2742%27 fill=%27%23F7C948%27/%3E%3C/svg%3E">
+<title>Құпия Санта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<style>
+/* Layout: one winter-night world. Illustrated night landscape on top, white rounded cards floating on the night sky below.
+   Deliberately single-theme: the night scene is the identity, cards are always white. */
+:root{
+  color-scheme:light;
+  --night:#1B2760; --night-2:#25367A; --night-3:#33479A; --snow:#E4ECFB; --moon:#F4F7FF;
+  --bg:#FFFFFF; --soft:#F1F4FB; --soft-2:#E6EBF7; --line:#DFE5F2;
+  --ink:#172152; --muted:#5F6A8E; --faint:#97A0BC;
+  --coral:#FF5E54; --coral-press:#EC4A40; --coral-soft:#FFE8E6;
+  --pine:#1F8A5B; --pine-soft:#E2F4EA; --amber:#D9791F; --amber-soft:#FDF0E1;
+  --him:#2F63D6; --him-soft:#E5EDFD; --her:#D2427C; --her-soft:#FCE6EF;
+  --onink:#FFFFFF;
+  --display:"Nunito",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:18px; --r-lg:28px;
+}
+*{box-sizing:border-box}
+body{background:var(--night);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.card{position:relative;z-index:1;background:var(--bg);border-radius:var(--r-lg);padding:clamp(20px,4vw,34px);box-shadow:0 20px 50px -24px rgba(5,10,40,.55)}
+h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,6vw,40px);line-height:1.12}
+h2{font-size:clamp(22px,4.4vw,28px);line-height:1.2}
+h3{font-size:18px;line-height:1.3}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--coral) 55%,transparent);outline-offset:2px}
+
+/* hero: night landscape */
+.hero{position:relative;z-index:1;overflow:hidden;color:#fff}
+.topbar{position:relative;z-index:3;max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.logo{font-weight:900;font-size:21px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;color:#fff}
+.logo i{width:10px;height:10px;border-radius:50%;background:var(--coral);display:inline-block;box-shadow:0 0 0 4px rgba(255,94,84,.25)}
+.hero-top{display:flex;gap:8px;flex-wrap:wrap}
+.chipbtn{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.28);border-radius:999px;padding:9px 16px;font-weight:800;font-size:15px;cursor:pointer;backdrop-filter:blur(4px)}
+.chipbtn:hover{background:rgba(255,255,255,.22)}
+.chipbtn svg{width:18px;height:18px}
+.moon{position:absolute;top:56px;right:max(6%,24px);width:clamp(64px,10vw,96px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 34% 36%,#fff 0 30%,var(--moon) 31%);box-shadow:0 0 0 14px rgba(255,255,255,.06),0 0 60px 10px rgba(200,215,255,.35);z-index:1}
+.moon::before,.moon::after{content:"";position:absolute;border-radius:50%;background:#D7E0F5}
+.moon::before{width:22%;height:22%;left:56%;top:22%}.moon::after{width:14%;height:14%;left:30%;top:60%}
+.hero-center{position:relative;z-index:2;text-align:center;max-width:760px;margin:0 auto;padding-block:clamp(18px,4vw,40px) 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:14px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-weight:800;font-size:14px;color:#C9D5FF}
+.gname{font-weight:900;font-size:clamp(34px,8vw,68px);line-height:1.02;letter-spacing:-.02em;text-wrap:balance;overflow-wrap:anywhere;color:#fff}
+.hero-sub{color:#C9D5FF;font-weight:700;font-size:17px}
+.hero-cta{background:var(--coral);color:#fff;border:0;border-radius:16px;padding:17px 30px;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 12px 28px -10px rgba(255,94,84,.75)}
+.hero-cta:hover{background:var(--coral-press)}
+.hero-link{background:none;border:0;color:#fff;font-weight:800;font-size:15px;border-bottom:1.5px solid rgba(255,255,255,.55);padding:0;cursor:pointer}
+.land{position:relative;height:clamp(230px,34vw,340px);margin-top:-6px}
+.land svg.scene{position:absolute;inset:0;width:100%;height:100%}
+.santa-slot{position:absolute;right:max(4%,12px);bottom:4%;width:clamp(150px,24vw,250px);aspect-ratio:240/260;z-index:2;display:flex;align-items:flex-end}
+.santa-slot svg{width:100%;height:auto}
+.santa-slot img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;border:6px solid #fff;box-shadow:0 12px 30px -10px rgba(5,10,40,.6)}
+.sign{position:absolute;left:max(5%,12px);bottom:10%;z-index:2;width:clamp(150px,22vw,210px);text-align:center}
+.sign .plank{background:#C98F5A;border:4px solid #8E5A31;border-radius:14px;padding:10px 8px 8px;color:#fff;box-shadow:inset 0 -6px 0 rgba(0,0,0,.12);position:relative}
+.sign .plank::before{content:"";position:absolute;left:-6px;right:-6px;top:-12px;height:18px;background:#fff;border-radius:12px 12px 8px 8px}
+.sign b{display:block;font-weight:900;font-size:clamp(28px,4vw,38px);line-height:1;font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 2px 0 #8E5A31}
+.sign span{display:block;font-weight:800;font-size:13px;margin-top:4px;color:#FFF3E3}
+.sign .post{width:14px;height:44px;margin:0 auto;background:#8E5A31;border-radius:0 0 4px 4px}
+.wave{transform-origin:178px 168px;animation:wave 2.6s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:rotate(0)}40%{transform:rotate(-14deg)}60%{transform:rotate(6deg)}}
+.blink{animation:blink 5s infinite;transform-origin:center;transform-box:fill-box}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+@media (prefers-reduced-motion:reduce){.wave,.blink,.flap,.snow{animation:none!important}}
+
+/* main column */
+.wrap{position:relative;z-index:1;background:var(--snow);max-width:none;margin:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 56px;display:flex;flex-direction:column;align-items:center;gap:22px}
+.wrap>*{width:100%;max-width:820px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.lead{color:var(--ink);font-size:17px;max-width:62ch}
+.muted{color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.fact{background:var(--soft);border-radius:var(--r);padding:12px 14px;min-width:0}
+.fact b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.fact span{display:block;font-weight:800;font-size:17px;margin-top:2px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.fact small{display:block;color:var(--muted);font-size:13px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r);padding:16px 22px;font-weight:700;font-size:17px;cursor:pointer;text-decoration:none;transition:transform .08s ease,background .15s ease}
+.btn:active{transform:scale(.985)}
+.btn[disabled]{opacity:.55;cursor:progress}
+.btn-main{background:var(--coral);color:#fff;width:100%;box-shadow:0 10px 26px -12px color-mix(in srgb,var(--coral) 80%,transparent)}
+.btn-main:hover{background:var(--coral-press)}
+.btn-ink{background:var(--ink);color:var(--onink);border-radius:999px;padding:12px 20px;font-size:16px}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);border-radius:999px;padding:11px 18px;font-size:15px}
+.btn-ghost:hover{background:var(--soft)}
+.btn-danger{background:transparent;color:var(--coral);border:1.5px solid color-mix(in srgb,var(--coral) 45%,transparent);border-radius:999px;padding:11px 18px;font-size:15px}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.link{background:none;border:0;padding:0;color:var(--coral);font-weight:600;cursor:pointer;border-bottom:1.5px dotted currentColor}
+
+.note{border-radius:var(--r);padding:14px 16px;font-size:15px}
+.note.warn{background:var(--amber-soft);color:color-mix(in srgb,var(--amber) 70%,var(--ink))}
+.note.ok{background:var(--pine-soft);color:color-mix(in srgb,var(--pine) 75%,var(--ink))}
+.note.info{background:var(--soft)}
+.note.bad{background:var(--coral-soft);color:color-mix(in srgb,var(--coral) 75%,var(--ink))}
+.confirm{background:var(--soft);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
+
+/* forms */
+.tabs{display:flex;gap:4px;background:var(--soft);border-radius:999px;padding:5px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:1 0 auto;border:0;background:transparent;border-radius:999px;padding:12px 18px;font-weight:700;color:var(--faint);cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.field{display:flex;flex-direction:column;gap:8px}
+.field>label,.field>.lbl{font-weight:800;font-size:17px;font-family:var(--display)}
+.hint{color:var(--muted);font-size:14px;margin-top:-4px}
+.in{width:100%;border:1.5px solid var(--line);background:var(--bg);border-radius:var(--r);padding:15px 16px;font-size:16px;min-width:0}
+.in:focus{border-color:var(--ink);outline:none}
+textarea.in{min-height:96px;resize:vertical}
+.err{color:var(--coral);font-size:14px;font-weight:600}
+.err:empty{display:none}
+.suggest{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.suggest button{flex:0 0 auto;border:0;background:var(--soft);border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer;color:var(--ink)}
+.suggest button:hover{background:var(--soft-2)}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) 130px;gap:10px}
+.radio{display:flex;gap:14px;align-items:flex-start;cursor:pointer;padding:6px 0}
+.radio input{appearance:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);flex:0 0 auto;margin:1px 0 0;display:grid;place-items:center;cursor:pointer}
+.radio input:checked{border-color:var(--coral)}
+.radio input:checked::after{content:"";width:14px;height:14px;border-radius:50%;background:var(--coral)}
+.radio b{display:block;font-weight:600;font-size:17px}
+.radio small{display:block;color:var(--muted);font-size:14px;margin-top:4px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg label{position:relative;display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;font-weight:700}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg .gi{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:800}
+.seg .m .gi{background:var(--him-soft);color:var(--him)}
+.seg .f .gi{background:var(--her-soft);color:var(--her)}
+.seg label:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.seg label:has(input:focus-visible){outline:3px solid color-mix(in srgb,var(--coral) 55%,transparent)}
+.photo-pick{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.photo-prev{width:76px;height:76px;border-radius:50%;background:var(--soft);display:grid;place-items:center;overflow:hidden;flex:0 0 auto;color:var(--faint)}
+.photo-prev.wide{width:120px;height:90px;border-radius:14px}
+.photo-prev img{width:100%;height:100%;object-fit:cover}
+.sticky-cta{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 70%,transparent);padding-top:16px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.formcard{display:flex;flex-direction:column;gap:26px}
+
+/* players */
+.ph{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ph h2 sup{font-size:15px;color:var(--faint);font-weight:600;margin-left:4px;vertical-align:super}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{border:1.5px solid var(--ink);background:transparent;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--onink)}
+.filters .n{background:var(--ink);color:var(--onink);border-radius:999px;min-width:24px;height:24px;display:inline-grid;place-items:center;font-size:13px;padding:0 6px}
+.filters button[aria-pressed="true"] .n{background:var(--onink);color:var(--ink)}
+.players{display:flex;flex-direction:column;gap:10px}
+.player{display:flex;align-items:center;gap:14px;border:1.5px solid var(--line);background:var(--soft);border-radius:var(--r-lg);padding:14px 14px 14px 16px;min-width:0}
+.av{width:54px;height:54px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:20px;overflow:hidden;font-family:var(--display)}
+.av img{width:100%;height:100%;object-fit:cover}
+.av.m{background:var(--him-soft);color:var(--him)}
+.av.f{background:var(--her-soft);color:var(--her)}
+.pinfo{flex:1;min-width:0}
+.pname{font-weight:700;font-size:17px;overflow-wrap:anywhere;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tag{font-size:12px;font-weight:700;border-radius:999px;padding:2px 8px}
+.tag.m{background:var(--him-soft);color:var(--him)}
+.tag.f{background:var(--her-soft);color:var(--her)}
+.tag.me{background:var(--ink);color:var(--onink)}
+.pstat{font-size:15px;color:var(--amber)}
+.pstat.done{color:var(--pine)}
+.pact{border:1.5px solid var(--line);background:var(--bg);border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:14px;cursor:pointer;flex:0 0 auto;color:var(--ink)}
+.pact svg{width:20px;height:20px}
+.pact.del{color:var(--coral)}
+.empty{border:1.5px dashed var(--line);border-radius:var(--r-lg);padding:26px;text-align:center;color:var(--muted)}
+
+/* envelope */
+.env-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:8px 0}
+.envelope{position:relative;width:min(100%,360px);aspect-ratio:3/2;max-width:100%;cursor:pointer;border:0;background:none;padding:0;perspective:900px}
+.envelope .body{position:absolute;inset:0;background:var(--coral);border-radius:18px;overflow:hidden}
+.envelope .body::before,.envelope .body::after{content:"";position:absolute;bottom:0;width:60%;height:100%;background:color-mix(in srgb,var(--coral) 82%,#000)}
+.envelope .body::before{left:0;clip-path:polygon(0 0,0 100%,100% 100%)}
+.envelope .body::after{right:0;clip-path:polygon(100% 0,100% 100%,0 100%)}
+.envelope .flap{position:absolute;inset:0 0 auto;height:62%;background:color-mix(in srgb,var(--coral) 88%,#fff);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;border-radius:18px 18px 0 0;transition:transform .6s ease;z-index:2}
+.envelope .seal{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);z-index:3;width:64px;height:64px;border-radius:50%;background:#F7C948;display:grid;place-items:center;box-shadow:0 4px 0 rgba(0,0,0,.15);font-family:var(--display);font-weight:900;color:#8A2121;font-size:28px}
+.envelope:hover .flap{transform:rotateX(18deg)}
+.flap.snow{animation:nudge 3s ease-in-out infinite}
+@keyframes nudge{0%,85%,100%{transform:rotateX(0)}92%{transform:rotateX(22deg)}}
+.reveal{width:100%;border-radius:var(--r-lg);border:1.5px solid var(--line);overflow:hidden;animation:pop .5s ease}
+@keyframes pop{from{transform:translateY(12px) scale(.98);opacity:.2}to{transform:none;opacity:1}}
+.reveal-top{background:var(--coral);color:#fff;padding:20px;display:flex;gap:16px;align-items:center}
+.reveal-top .av{width:84px;height:84px;font-size:32px;border:3px solid #fff}
+.reveal-top .who{min-width:0}
+.reveal-top small{display:block;font-weight:600;opacity:.9}
+.reveal-top strong{display:block;font-family:var(--display);font-weight:900;font-size:clamp(24px,5.5vw,32px);line-height:1.1;overflow-wrap:anywhere}
+.reveal-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.qa b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.qa p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px}
+.qa.no p{color:var(--coral)}
+
+/* rules */
+.rules{display:grid;gap:16px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;counter-reset:s}
+.steps li{background:var(--soft);border-radius:var(--r);padding:16px;counter-increment:s;min-width:0}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--onink);font-weight:800;margin-bottom:10px;font-family:var(--display)}
+.steps b{display:block;font-size:16px}
+.steps span{color:var(--muted);font-size:15px}
+.rlist{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.rlist li{display:flex;gap:12px;align-items:flex-start}
+.rlist li::before{content:"";flex:0 0 10px;height:10px;border-radius:3px;background:var(--coral);margin-top:8px;transform:rotate(45deg)}
+.gift-rule{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.gift-rule div{border-radius:var(--r);padding:14px 16px;font-weight:600}
+.gift-rule .a{background:var(--him-soft);color:var(--him)}
+.gift-rule .b{background:var(--her-soft);color:var(--her)}
+.gift-rule .c{background:var(--soft);color:var(--ink)}
+footer{position:relative;z-index:1;background:var(--snow);color:var(--muted);font-weight:700;font-size:14px;text-align:center;padding-block:22px calc(22px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--onink);padding:12px 18px;border-radius:999px;font-weight:600;z-index:20;max-width:calc(100% - 32px);text-align:center}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:520px){
+  .sign{bottom:6%}
+  .chipbtn{padding:8px 12px;font-size:14px}
+  .moon{top:64px}
+  .land{height:250px}
+  .seg{grid-template-columns:1fr}
+}
+html,body{margin:0}
+[hidden]{display:none!important}
+img{max-width:100%}
+.linkbox{display:flex;gap:8px;flex-wrap:wrap}
+.linkbox input{flex:1 1 220px}
+.games{display:flex;flex-direction:column;gap:8px}
+.games a{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--soft);border-radius:var(--r);padding:14px 16px;color:var(--ink);text-decoration:none;font-weight:800}
+.games a:hover{background:var(--soft-2)}
+.games small{color:var(--muted);font-weight:700}
+.gbtn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1F1F1F;border:1.5px solid var(--line);border-radius:var(--r);padding:14px 20px;font-weight:800;font-size:17px;cursor:pointer;width:100%}
+.gbtn:hover{background:var(--soft)}
+.gbtn svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<header class="hero" aria-label="Ойын баннері">
+  <div class="moon" aria-hidden="true"></div>
+  <div class="topbar">
+    <div class="logo"><i aria-hidden="true"></i>құпия санта</div>
+    <div class="hero-top">
+      <button class="chipbtn" id="btnSettings" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Баптау</button>
+      <button class="chipbtn" id="btnAuth" type="button">Кіру</button>
+      <button class="chipbtn" id="btnInvite" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>Шақыру</button>
+    </div>
+  </div>
+  <div class="hero-center">
+    <span class="eyebrow">✦ Мерекелік сыйлық алмасу ойыны</span>
+    <div class="gname" id="heroName">құпия санта</div>
+    <p class="hero-sub" id="heroSub">Достарыңызбен, әріптестеріңізбен немесе отбасыңызбен ойнаңыз</p>
+    <button class="hero-cta" type="button" id="heroCta">Ойынға өту</button>
+    <button class="hero-link" type="button" id="heroRules">Ойын ережелері</button>
+  </div>
+  <div class="land">
+    <svg class="scene" viewBox="0 0 1200 340" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <g fill="#fff"><circle cx="80" cy="30" r="2"/><circle cx="260" cy="70" r="1.6"/><circle cx="420" cy="20" r="2.2"/><circle cx="700" cy="50" r="1.6"/><circle cx="880" cy="24" r="2"/><circle cx="1110" cy="80" r="1.8"/><circle cx="560" cy="90" r="1.4"/></g>
+      <path d="M0 150 Q180 80 380 130 Q560 170 760 110 Q960 60 1200 120 V340 H0Z" fill="#33479A"/>
+      <g fill="#22306B">
+        <path d="M120 150 l26 -70 l26 70z"/><path d="M128 120 l18 -50 l18 50z"/>
+        <path d="M180 156 l20 -54 l20 54z"/>
+        <path d="M930 116 l24 -66 l24 66z"/><path d="M938 90 l16 -46 l16 46z"/>
+        <path d="M985 124 l18 -50 l18 50z"/>
+        <path d="M640 140 l16 -44 l16 44z"/>
+      </g>
+      <path d="M0 210 Q220 140 470 190 Q700 235 940 175 Q1080 145 1200 170 V340 H0Z" fill="#6C86D6"/>
+      <g>
+        <ellipse cx="300" cy="170" rx="46" ry="52" fill="#DCE6FB"/><ellipse cx="290" cy="160" rx="34" ry="38" fill="#fff"/><rect x="296" y="205" width="8" height="26" fill="#2A2F55"/>
+        <ellipse cx="1060" cy="150" rx="40" ry="46" fill="#DCE6FB"/><ellipse cx="1052" cy="140" rx="30" ry="34" fill="#fff"/><rect x="1056" y="188" width="8" height="24" fill="#2A2F55"/>
+      </g>
+      <g stroke="#2A2F55" stroke-width="5" stroke-linecap="round" fill="none">
+        <path d="M760 220 V150 M760 180 l-22 -20 M760 168 l20 -22 M760 196 l26 -14 M738 160 l-8 -14 M780 146 l6 -14"/>
+      </g>
+      <path d="M0 260 Q260 200 560 250 Q860 295 1200 230 V340 H0Z" fill="#C9D7F6"/>
+      <path d="M0 300 Q300 262 620 296 Q900 322 1200 284 V340 H0Z" fill="#E4ECFB"/>
+      <g fill="#fff" opacity=".9"><ellipse cx="180" cy="300" rx="60" ry="8"/><ellipse cx="820" cy="306" rx="80" ry="8"/></g>
+    </svg>
+    <div class="sign" aria-live="polite"><div class="plank"><b id="signCount">0</b><span id="signLabel">қатысушы</span></div><div class="post"></div></div>
+    <div class="santa-slot" id="santaSlot"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card" id="inviteBox" hidden></div>
+
+  <section class="card stack" id="statusSec" aria-live="polite">
+    <h1 id="statusTitle">Жүктелуде…</h1>
+    <div class="stack" id="stage"></div>
+  </section>
+
+  <!-- create / settings -->
+  <section class="card formcard" id="createSec" hidden>
+    <div class="stack">
+      <h1 id="createTitle">Ойын құру</h1>
+      <p class="muted" id="createSub">Сіз — хостсыз. Ойынды баптап, қатысушыларды шақырыңыз.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Ойын баптаулары">
+      <button type="button" role="tab" id="tabMain" aria-selected="true" aria-controls="paneMain">Негізгі</button>
+      <button type="button" role="tab" id="tabLook" aria-selected="false" aria-controls="paneLook">Безендіру</button>
+      <button type="button" role="tab" id="tabMore" aria-selected="false" aria-controls="paneMore">Қосымша</button>
+    </div>
+    <form id="gameForm" class="formcard" novalidate>
+      <div class="formcard" id="paneMain" role="tabpanel" aria-labelledby="tabMain">
+        <div class="field">
+          <label for="gName">Ойын атауы</label>
+          <p class="hint">Атауды барлық ойыншылар көреді</p>
+          <input class="in" id="gName" maxlength="60" placeholder="Мысалы: Достармен Құпия Санта" autocomplete="off">
+          <div class="suggest" id="nameSuggest">
+            <button type="button">Құпия Санта 2027</button><button type="button">Достармен ойын</button><button type="button">Жұмыстағы Санта</button><button type="button">Отбасылық Санта</button><button type="button">Курстастар Сантасы</button>
+          </div>
+          <div class="err" id="eName"></div>
+        </div>
+        <div class="field">
+          <span class="lbl">Сыйлықты қалай береміз?</span>
+          <label class="radio"><input type="radio" name="gMode" id="gModeLive" value="live" checked><span><b>Кездесуде, қолма-қол</b><small>Кеңседе немесе достармен бір жерге жиналатын ойындарға ыңғайлы. Мекенжай сұралмайды.</small></span></label>
+          <label class="radio"><input type="radio" name="gMode" id="gModePost" value="post"><span><b>Пошта немесе жеткізу арқылы</b><small>Бір-бірінен алыс тұратындарға ыңғайлы. Әр қатысушы жеткізу мекенжайын жазады.</small></span></label>
+        </div>
+        <div class="field">
+          <label for="gBudget">Сыйлық сомасы</label>
+          <div class="row2">
+            <input class="in" id="gBudget" inputmode="numeric" placeholder="10000" autocomplete="off">
+            <select class="in" id="gCur" aria-label="Валюта"><option value="₸">₸ теңге</option><option value="₽">₽ рубль</option><option value="$">$ доллар</option><option value="€">€ еуро</option></select>
+          </div>
+          <div class="suggest" id="budgetSuggest">
+            <button type="button" data-v="3000">3 000</button><button type="button" data-v="5000">5 000</button><button type="button" data-v="10000">10 000</button><button type="button" data-v="15000">15 000</button><button type="button" data-v="20000">20 000</button><button type="button" data-v="30000">30 000</button>
+          </div>
+          <div class="err" id="eBudget"></div>
+        </div>
+        <div class="field">
+          <label for="gDraw">Жеребені қай күні тартамыз?</label>
+          <p class="hint">Осы күнге дейін барлық қатысушы тіркеліп үлгеруі керек</p>
+          <input class="in" type="date" id="gDraw">
+          <div class="err" id="eDraw"></div>
+        </div>
+        <div class="field">
+          <label for="gGift">Сыйлықты қай күні береміз?</label>
+          <input class="in" type="date" id="gGift">
+          <div class="err" id="eGift"></div>
+        </div>
+      </div>
+      <div class="formcard" id="paneLook" role="tabpanel" aria-labelledby="tabLook" hidden>
+        <div class="field">
+          <span class="lbl">Хосттың суреті</span>
+          <p class="hint">Құпия Санта бейнесіндегі суретіңізді жүктеңіз. Ол баннерде тұрады. Сурет болмаса, біздің Санта тұрады.</p>
+          <div class="photo-pick">
+            <div class="photo-prev wide" id="hostPrev"></div>
+            <div class="btn-row">
+              <label class="btn btn-ghost" for="hostFile">Сурет таңдау</label>
+              <input class="sr" type="file" id="hostFile" accept="image/*">
+              <button type="button" class="btn btn-ghost" id="hostClear">Өшіру</button>
+            </div>
+          </div>
+          <div class="err" id="eHost"></div>
+        </div>
+      </div>
+      <div class="formcard" id="paneMore" role="tabpanel" aria-labelledby="tabMore" hidden>
+        <div class="field">
+          <label for="gNote">Қатысушыларға хабарлама</label>
+          <p class="hint">Міндетті емес. Мысалы, кездесу орны мен уақыты</p>
+          <textarea class="in" id="gNote" maxlength="500" placeholder="Сыйлықтарды 28 желтоқсанда кешкі 19:00-де кафеде табыстаймыз"></textarea>
+        </div>
+        <div class="stack" id="dangerZone" hidden>
+          <h3>Ойынды басқару</h3>
+          <div class="btn-row">
+            <button type="button" class="btn btn-ghost" id="btnReopen">Тіркелуді қайта ашу</button>
+            <button type="button" class="btn btn-danger" id="btnDelete">Ойынды толық өшіру</button>
+          </div>
+          <div id="dangerConfirm"></div>
+        </div>
+      </div>
+      <div class="sticky-cta stack">
+        <div class="err" id="eGame"></div>
+        <button class="btn btn-main" type="submit" id="gameSubmit">Ойынды құру</button>
+        <button class="btn btn-ghost" type="button" id="gameCancel" hidden>Болдырмау</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- join / profile -->
+  <section class="card formcard" id="joinSec" hidden>
+    <div class="stack">
+      <h1 id="joinTitle">Ойынға қосылу</h1>
+      <p class="muted">Өзіңіз туралы қысқаша анкета толтырыңыз. Оны сізге сыйлық дайындайтын Санта ғана ашады.</p>
+    </div>
+    <form id="joinForm" class="formcard" novalidate>
+      <div class="field">
+        <label for="pName">Атыңыз</label>
+        <input class="in" id="pName" maxlength="40" placeholder="Мысалы: Айгерім" autocomplete="given-name">
+        <div class="err" id="epName"></div>
+      </div>
+      <fieldset class="field" style="border:0;padding:0;margin:0">
+        <legend class="lbl" style="font-weight:800;font-size:17px;font-family:var(--display);margin-bottom:8px">Жынысыңыз</legend>
+        <div class="seg">
+          <label class="m"><input type="radio" name="pGender" id="pGenderM" value="m"><span class="gi" aria-hidden="true">♂</span>Ер адам</label>
+          <label class="f"><input type="radio" name="pGender" id="pGenderF" value="f"><span class="gi" aria-hidden="true">♀</span>Әйел адам</label>
+        </div>
+        <div class="err" id="epGender"></div>
+      </fieldset>
+      <div class="field">
+        <span class="lbl">Суретіңіз</span>
+        <p class="hint">Міндетті емес, бірақ Сантаға сізді тану оңай болады</p>
+        <div class="photo-pick">
+          <div class="photo-prev" id="pPrev"></div>
+          <div class="btn-row">
+            <label class="btn btn-ghost" for="pFile">Сурет таңдау</label>
+            <input class="sr" type="file" id="pFile" accept="image/*">
+            <button type="button" class="btn btn-ghost" id="pClear">Өшіру</button>
+          </div>
+        </div>
+        <div class="err" id="epPhoto"></div>
+      </div>
+      <div class="field">
+        <label for="pWish">Сыйлыққа не алғыңыз келеді?</label>
+        <textarea class="in" id="pWish" maxlength="600" placeholder="Мысалы: кітап, жылы шарф, үстел ойыны, хош иісті шам"></textarea>
+        <div class="err" id="epWish"></div>
+      </div>
+      <div class="field">
+        <label for="pAvoid">Не сыйламау керек?</label>
+        <textarea class="in" id="pAvoid" maxlength="400" placeholder="Мысалы: тәттілер (аллергия), косметика, сувенир магниттер"></textarea>
+      </div>
+      <div class="field" id="addrField" hidden>
+        <label for="pAddr">Жеткізу мекенжайы</label>
+        <p class="hint">Қала, көше, үй, пәтер, индекс және телефон</p>
+        <textarea class="in" id="pAddr" maxlength="300" placeholder="Алматы, Абай даңғылы 10, 25-пәтер, 050000"></textarea>
+        <div class="err" id="epAddr"></div>
+      </div>
+      <div class="sticky-cta stack">
+        <div class="err" id="epForm"></div>
+        <button class="btn btn-main" type="submit" id="joinSubmit">Ойынға қосылу</button>
+        <button class="btn btn-ghost" type="button" id="joinCancel" hidden>Болдырмау</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card stack" id="playersSec" hidden>
+    <div class="ph">
+      <h2>Ойыншылар<sup id="pCount">0</sup></h2>
+      <button class="btn btn-ink" type="button" id="btnAddMe" hidden>+ Қосылу</button>
+    </div>
+    <div class="filters" role="group" aria-label="Сүзгі">
+      <button type="button" data-f="all" aria-pressed="true">Барлығы</button>
+      <button type="button" data-f="m" aria-pressed="false">Ерлер <span class="n" id="nM">0</span></button>
+      <button type="button" data-f="f" aria-pressed="false">Әйелдер <span class="n" id="nF">0</span></button>
+    </div>
+    <div class="players" id="players"></div>
+  </section>
+
+  <section class="card rules" id="rulesSec" aria-labelledby="rulesH">
+    <h2 id="rulesH">Құпия Санта деген не?</h2>
+    <p class="lead">Құпия Санта — достар, әріптестер немесе туыстар арасындағы мерекелік сыйлық алмасу ойыны. Әр қатысушы жеребе арқылы бір адамға құпия түрде сыйлық дайындайды. Кім кімге сыйлық беретінін ешкім білмейді, бұл сыйлық табысталғанша құпия болып қалады.</p>
+    <h3>Қалай ойнаймыз</h3>
+    <ol class="steps">
+      <li><b>Хост ойын құрады</b><span>Атауын, сыйлық сомасын, жеребе және сыйлық беру күнін белгілейді.</span></li>
+      <li><b>Қатысушылар тіркеледі</b><span>Әркім атын, жынысын жазып, не қалайтыны мен не қаламайтыны туралы анкета толтырады.</span></li>
+      <li><b>Хост жеребе тартады</b><span>Барлығы қосылған соң, жүйе әр қатысушыға кездейсоқ бір адамды таңдайды.</span></li>
+      <li><b>Конвертті ашасыз</b><span>Кімге сыйлық беретініңізді және оның анкетасын көресіз.</span></li>
+      <li><b>Сыйлық табыстаймыз</b><span>Белгіленген күні сыйлықтар иесіне жетеді.</span></li>
+    </ol>
+    <h3>Жеребе қалай тартылады</h3>
+    <div class="gift-rule">
+      <div class="a">Ер адам әрқашан әйелге сыйлық береді</div>
+      <div class="b">Әйел адам ерге сыйлық береді</div>
+      <div class="c">Ерлер жетпесе, әйел әйелге сыйлық береді</div>
+    </div>
+    <h3>Ойын ережелері</h3>
+    <ul class="rlist">
+      <li>Кімге сыйлық беретініңізді ешкімге айтпаңыз.</li>
+      <li>Сыйлық бағасы хост белгілеген сомадан аспауы керек.</li>
+      <li>Анкетадағы тілектерді ескеріңіз, ал «не сыйламау керек» дегенді міндетті түрде сақтаңыз.</li>
+      <li>Ешкім өзіне-өзі сыйлық бермейді. Әр адам бір сыйлық береді және бір сыйлық алады.</li>
+      <li>Ер адамдар саны әйелдерден көп болса, жеребе тартылмайды.</li>
+      <li>Сыйлықты белгіленген күні табыстаңыз. Жылы тілек жазылған хат қосуды ұмытпаңыз.</li>
+    </ul>
+  </section>
+</main>
+<footer>Құпия Санта · Жақсылық сыйлаңыз</footer>
+<div class="toast" id="toast" role="status" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

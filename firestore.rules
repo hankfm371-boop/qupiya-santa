@@ -1,0 +1,67 @@
+rules_version = '2';
+
+// Құпия Санта — правила безопасности Cloud Firestore.
+// Скопируйте этот файл целиком в Firebase Console → Firestore Database → Rules и нажмите Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function gameData(gid) { return get(/databases/$(database)/documents/games/$(gid)).data; }
+    function isHost(gid) { return signedIn() && gameData(gid).hostUid == request.auth.uid; }
+    function isMember(gid) { return signedIn() && exists(/databases/$(database)/documents/games/$(gid)/members/$(request.auth.uid)); }
+    function shortStr(v, max) { return v is string && v.size() <= max; }
+    function photoOk(v, max) { return v == null || (v is string && v.size() <= max && v.matches('^data:image/(jpeg|png|webp);base64,.*')); }
+
+    // Личный ключ шифрования: виден только его владельцу.
+    match /keys/{uid} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+    }
+
+    match /games/{gid} {
+      function validGame(d) {
+        return shortStr(d.name, 60) && d.name.size() > 0
+          && d.budget is number && d.budget > 0
+          && d.currency in ['₸', '₽', '$', '€']
+          && d.mode in ['live', 'post']
+          && shortStr(d.drawDate, 10) && shortStr(d.giftDate, 10)
+          && shortStr(d.note, 500)
+          && photoOk(d.photo, 420000)
+          && d.status in ['open', 'drawn'];
+      }
+      // Игру видит любой, у кого есть ссылка.
+      allow read: if true;
+      // Создать игру может любой вошедший; создатель становится хостом.
+      allow create: if signedIn() && request.resource.data.hostUid == request.auth.uid
+        && request.resource.data.status == 'open' && validGame(request.resource.data);
+      // Менять и удалять игру может только хост; сменить хоста нельзя.
+      allow update: if isHost(gid) && request.resource.data.hostUid == resource.data.hostUid && validGame(request.resource.data);
+      allow delete: if isHost(gid);
+
+      match /members/{uid} {
+        function validMember(d) {
+          return shortStr(d.name, 40) && d.name.size() > 0
+            && d.gender in ['m', 'f']
+            && shortStr(d.wish, 600) && d.wish.size() > 0
+            && shortStr(d.avoid, 400) && shortStr(d.addr, 300)
+            && photoOk(d.photo, 120000)
+            && d.pub is map;
+        }
+        // Анкеты видят только участники этой игры и хост.
+        allow get: if signedIn() && (request.auth.uid == uid || isMember(gid) || isHost(gid));
+        allow list: if isMember(gid) || isHost(gid);
+        // Свою анкету участник пишет сам и только пока регистрация открыта.
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && gameData(gid).status == 'open' && validMember(request.resource.data);
+        // Выйти может сам участник (до жеребьёвки), удалить любого — хост.
+        allow delete: if (signedIn() && request.auth.uid == uid && gameData(gid).status == 'open') || isHost(gid);
+      }
+
+      // Результат жеребьёвки зашифрован ключом дарителя: хост видит только шифр.
+      match /pairs/{uid} {
+        allow get: if signedIn() && (request.auth.uid == uid || isHost(gid));
+        allow list: if isHost(gid);
+        allow write: if isHost(gid);
+      }
+    }
+  }
+}

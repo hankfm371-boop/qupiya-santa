@@ -314,8 +314,7 @@ function playersHTML() {
 function render() {
   const g = S.game;
   $("#heroName").textContent = g && g.name ? g.name : "Құпия Санта";
-  $("#heroSub").textContent = g ? ("Сыйлық " + fmtMoney(g.budget, g.currency) + " · жеребе " + fmtDate(g.drawDate) + " · сыйлық беру " + fmtDate(g.giftDate))
-    : "Достарыңызбен, әріптестеріңізбен немесе отбасыңызбен ойнаңыз";
+  $("#heroSub").textContent = "Қош келдіңіз, қымбатты дос! Шығыстың ертегідей түнінде сізді құпия сыйлық күтіп тұр";
   $("#signCount").textContent = S.membersVisible ? S.members.length : (g ? "?" : "0");
   const slot = $("#santaSlot"), want = g && okImg(g.photo) ? "img:" + g.photo.length + g.photo.slice(-24) : "svg";
   if (slot.dataset.k !== want) { slot.dataset.k = want; slot.innerHTML = want === "svg" ? SANTA : `<img src="${g.photo}" alt="Хост — Құпия Санта">`; }

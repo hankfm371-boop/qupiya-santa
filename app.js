@@ -622,14 +622,25 @@ document.addEventListener("click", async e => {
   size(); if (window.ResizeObserver) new ResizeObserver(size).observe(host); else addEventListener("resize", size); frame();
 })();
 
-/* ---------- music: music.mp3 if present, otherwise an original pentatonic tune made in the browser ---------- */
+/* ---------- music: music.mp3 if present, otherwise "Jingle Bells" (J. Pierpont, 1857, public domain) played in the browser ---------- */
 const Music = (() => {
-  let ctx = null, master = null, echo = null, timer = null, step = 0, on = false;
+  let ctx = null, master = null, echo = null, noise = null, timer = null, on = false;
   let audioEl = null, fileState = "unknown";
+  let nextTime = 0, noteIdx = 0, beatIdx = 0, nextBeat = 0;
   const btn = $("#btnMusic"), label = $("#musicLabel");
-  const D4 = 293.66, SCALE = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
-  const hz = (semi, oct = 0) => D4 * Math.pow(2, (semi + oct * 12) / 12);
-  let phrase = [], idx = 3;
+  const BEAT = 0.36;                                   // ~167 bpm, quarter note
+  const C4 = 261.63, hz = s => C4 * Math.pow(2, s / 12);
+  // chorus melody in C major: [semitones from C4, beats]; null = rest
+  const E = 4, F = 5, G = 7, D = 2, C = 0;
+  const MELODY = [
+    [E, 1], [E, 1], [E, 2], [E, 1], [E, 1], [E, 2], [E, 1], [G, 1], [C, 1.5], [D, .5], [E, 4],
+    [F, 1], [F, 1], [F, 1.5], [F, .5], [F, 1], [E, 1], [E, 1], [E, .5], [E, .5], [E, 1], [D, 1], [D, 1], [E, 1], [D, 2], [G, 2],
+    [E, 1], [E, 1], [E, 2], [E, 1], [E, 1], [E, 2], [E, 1], [G, 1], [C, 1.5], [D, .5], [E, 4],
+    [F, 1], [F, 1], [F, 1.5], [F, .5], [F, 1], [E, 1], [E, 1], [E, .5], [E, .5], [G, 1], [G, 1], [F, 1], [D, 1], [C, 4]
+  ];
+  // one chord root per bar (4 beats), 16 bars, as semitones from C2
+  const BASS = [0, 0, 0, 0, 5, 0, 2, 7, 0, 0, 0, 0, 5, 0, 7, 0];
+  const LOOP_BEATS = 64;
 
   async function hasFile() {
     if (fileState !== "unknown") return fileState === "yes";
@@ -640,58 +651,49 @@ const Music = (() => {
   function setup() {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
-    const d = ctx.createDelay(1); d.delayTime.value = .36;
-    const fb = ctx.createGain(); fb.gain.value = .33;
-    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2200;
-    echo = ctx.createGain(); echo.gain.value = .35;
+    const d = ctx.createDelay(1); d.delayTime.value = .27;
+    const fb = ctx.createGain(); fb.gain.value = .22;
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2600;
+    echo = ctx.createGain(); echo.gain.value = .22;
     echo.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(master);
+    noise = ctx.createBuffer(1, ctx.sampleRate * .3, ctx.sampleRate);
+    const ch = noise.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
   }
-  function pluck(f, t, vol, dur) {           // koto / qanun-like pluck
-    [[1, "triangle", vol], [2, "sine", vol * .35], [3, "sine", vol * .12]].forEach(([m, type, v]) => {
+  function tone(f, t, dur) {                           // bright music-box / glockenspiel voice
+    [[1, "triangle", .16], [2, "sine", .06], [4, "sine", .025]].forEach(([m, type, v]) => {
       const o = ctx.createOscillator(), g = ctx.createGain();
       o.type = type; o.frequency.value = f * m;
-      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .008); g.gain.exponentialRampToValueAtTime(.0001, t + dur / m);
-      o.connect(g); g.connect(master); g.connect(echo); o.start(t); o.stop(t + dur + .1);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .01);
+      g.gain.exponentialRampToValueAtTime(.0001, t + Math.max(.35, dur * BEAT * 1.1));
+      o.connect(g); g.connect(master); g.connect(echo); o.start(t); o.stop(t + dur * BEAT * 1.2 + .4);
     });
   }
-  function bell(f, t) {
+  function bass(f, t) {
     const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = "sine"; o.frequency.value = f;
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + 3.2);
-    o.connect(g); g.connect(master); g.connect(echo); o.start(t); o.stop(t + 3.3);
+    o.type = "triangle"; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.14, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + BEAT * .9);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + BEAT);
   }
-  function drone(t) {
-    [hz(0, -2), hz(7, -2)].forEach(f => {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.type = "sine"; o.frequency.value = f;
-      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t + .8); g.gain.linearRampToValueAtTime(0, t + 5.4);
-      o.connect(g); g.connect(master); o.start(t); o.stop(t + 5.5);
-    });
+  function sleigh(t, accent) {                         // sleigh bells: filtered noise shake
+    const s = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = noise; bp.type = "bandpass"; bp.frequency.value = 7500; bp.Q.value = 1.4;
+    g.gain.setValueAtTime(accent ? .22 : .12, t); g.gain.exponentialRampToValueAtTime(.0001, t + .16);
+    s.connect(bp); bp.connect(g); g.connect(master); s.start(t); s.stop(t + .2);
   }
-  function drum(t, low) {                      // soft frame drum: dum / tek
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = "sine"; o.frequency.setValueAtTime(low ? 110 : 220, t); o.frequency.exponentialRampToValueAtTime(low ? 55 : 140, t + .12);
-    g.gain.setValueAtTime(low ? .16 : .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + (low ? .3 : .12));
-    o.connect(g); g.connect(master); o.start(t); o.stop(t + .35);
-  }
-  function newPhrase() {
-    phrase = [];
-    for (let i = 0; i < 8; i++) {
-      idx = Math.max(0, Math.min(SCALE.length - 1, idx + [-2, -1, -1, 0, 1, 1, 2][rnd(7)]));
-      phrase.push(rnd(5) === 0 ? null : SCALE[idx]);
+  function schedule() {
+    const ahead = ctx.currentTime + .25;
+    while (nextTime < ahead) {                          // melody
+      const [semi, beats] = MELODY[noteIdx];
+      if (semi != null) tone(hz(semi), nextTime, beats);
+      nextTime += beats * BEAT;
+      noteIdx = (noteIdx + 1) % MELODY.length;
     }
-    phrase[7] = rnd(2) ? SCALE[0] : SCALE[4];
-  }
-  const BEAT = .3, DRUMS = { 0: 1, 3: 0, 4: 1, 6: 0 };   // maqsum-like: dum . . tek dum . tek .
-  function tick() {
-    const t = ctx.currentTime + .05, s = step % 32, n = s % 8;
-    if (s === 0) { newPhrase(); drone(t); }
-    if (s === 16) drone(t);
-    const note = phrase[n];
-    if (note != null && !(s >= 24 && n % 2)) pluck(hz(note), t, .12, 1.4);
-    if (n in DRUMS) drum(t, DRUMS[n] === 1);
-    if (s % 16 === 10) bell(hz(SCALE[rnd(5)], 2), t);
-    step++;
+    while (nextBeat < ahead) {                          // bass "oom-pah" and bells, locked to the same grid
+      const b = beatIdx % LOOP_BEATS, root = BASS[Math.floor(b / 4)], f = C4 / 2 * Math.pow(2, root / 12);
+      bass(b % 2 === 0 ? f : f * 1.5, nextBeat);
+      sleigh(nextBeat, b % 4 === 0); sleigh(nextBeat + BEAT / 2, false);
+      nextBeat += BEAT; beatIdx++;
+    }
   }
   function ui() { btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on)); label.textContent = on ? "Әуенді өшіру" : "Әуенді қосу"; }
   async function start() {
@@ -702,13 +704,16 @@ const Music = (() => {
     }
     if (!ctx) setup();
     await ctx.resume();
-    master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(.9, ctx.currentTime, .4);
-    if (!timer) { step = 0; timer = setInterval(tick, BEAT * 1000); }
+    master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(.85, ctx.currentTime, .15);
+    if (!timer) {
+      nextTime = nextBeat = ctx.currentTime + .1; noteIdx = 0; beatIdx = 0;
+      timer = setInterval(schedule, 60); schedule();
+    }
     on = true; ui();
   }
   function stopAll() {
     if (audioEl) audioEl.pause();
-    if (ctx) { master.gain.setTargetAtTime(0, ctx.currentTime, .25); setTimeout(() => { if (!on && timer) { clearInterval(timer); timer = null; } }, 900); }
+    if (ctx) { master.gain.setTargetAtTime(0, ctx.currentTime, .2); setTimeout(() => { if (!on && timer) { clearInterval(timer); timer = null; } }, 800); }
     on = false; ui();
   }
   btn.addEventListener("click", () => on ? stopAll() : start());

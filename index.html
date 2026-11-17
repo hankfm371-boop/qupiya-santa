@@ -88,13 +88,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 .twinkle:nth-child(3n){animation-delay:-1s}.twinkle:nth-child(4n){animation-delay:-2s}
 @keyframes twinkle{0%,100%{opacity:.35}50%{opacity:1}}
 
-/* music toggle */
-.music{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:15;display:flex;align-items:center;gap:10px;background:var(--night);color:#fff;border:2px solid var(--gold);border-radius:999px;padding:10px 16px 10px 12px;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 10px 30px -8px rgba(23,13,54,.6)}
-.music .eq{display:flex;gap:2px;align-items:flex-end;height:16px}
-.music .eq i{width:3px;height:4px;background:var(--gold);border-radius:2px}
-.music.on .eq i{animation:eq .9s ease-in-out infinite}
-.music.on .eq i:nth-child(2){animation-delay:-.3s}.music.on .eq i:nth-child(3){animation-delay:-.6s}.music.on .eq i:nth-child(4){animation-delay:-.15s}
-@keyframes eq{0%,100%{height:4px}50%{height:16px}}
 
 /* Eastern celebrations */
 .lands{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
@@ -110,7 +103,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .land-card.cn .em{background:#FBE3E3}.land-card.jp .em{background:#FCE9EF}.land-card.kr .em{background:#E4ECFB}
 .land-card.tr .em{background:#FCE6E6}.land-card.ar .em{background:#FBF0DA}.land-card.ir .em{background:#DDF2F1}
 [dir="rtl"]{unicode-bidi:isolate}
-@media (prefers-reduced-motion:reduce){.wave,.blink,.flap,.snow,.sway,.sign,.twinkle,.music.on .eq i{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.wave,.blink,.flap,.snow,.sway,.sign,.twinkle{animation:none!important}}
 
 /* main column */
 .wrap{position:relative;z-index:1;background:var(--paper);max-width:none;margin:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 56px;display:flex;flex-direction:column;align-items:center;gap:22px}
@@ -269,6 +262,14 @@ img{max-width:100%}
 .gbtn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1F1F1F;border:1.5px solid var(--line);border-radius:var(--r);padding:14px 20px;font-weight:800;font-size:17px;cursor:pointer;width:100%}
 .gbtn:hover{background:var(--soft)}
 .gbtn svg{width:22px;height:22px}
+/* music toggle */
+.music{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:15;display:flex;align-items:center;gap:10px;background:var(--night);color:#fff;border:2px solid var(--gold);border-radius:999px;padding:10px 16px 10px 12px;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 10px 30px -8px rgba(23,13,54,.6)}
+.music .eq{display:flex;gap:2px;align-items:flex-end;height:16px}
+.music .eq i{width:3px;height:4px;background:var(--gold);border-radius:2px}
+.music.on .eq i{animation:eq .9s ease-in-out infinite}
+.music.on .eq i:nth-child(2){animation-delay:-.3s}.music.on .eq i:nth-child(3){animation-delay:-.6s}.music.on .eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:4px}50%{height:16px}}
+@media (prefers-reduced-motion:reduce){.music.on .eq i{animation:none!important}}
 </style>
 </head>
 <body>

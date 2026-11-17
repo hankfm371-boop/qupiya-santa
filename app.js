@@ -621,103 +621,19 @@ document.addEventListener("click", async e => {
   size(); if (window.ResizeObserver) new ResizeObserver(size).observe(host); else addEventListener("resize", size); frame();
 })();
 
-/* ---------- music: music.mp3 if present, otherwise "Jingle Bells" (J. Pierpont, 1857, public domain) played in the browser ---------- */
-const Music = (() => {
-  let ctx = null, master = null, echo = null, noise = null, timer = null, on = false;
-  let audioEl = null, fileState = "unknown";
-  let nextTime = 0, noteIdx = 0, beatIdx = 0, nextBeat = 0;
+/* ---------- music: "Christmas Eve Music" by AtlasAudio (Pixabay Content License), looped ---------- */
+(function music() {
   const btn = $("#btnMusic"), label = $("#musicLabel");
-  const BEAT = 0.36;                                   // ~167 bpm, quarter note
-  const C4 = 261.63, hz = s => C4 * Math.pow(2, s / 12);
-  // chorus melody in C major: [semitones from C4, beats]; null = rest
-  const E = 4, F = 5, G = 7, D = 2, C = 0;
-  const MELODY = [
-    [E, 1], [E, 1], [E, 2], [E, 1], [E, 1], [E, 2], [E, 1], [G, 1], [C, 1.5], [D, .5], [E, 4],
-    [F, 1], [F, 1], [F, 1.5], [F, .5], [F, 1], [E, 1], [E, 1], [E, .5], [E, .5], [E, 1], [D, 1], [D, 1], [E, 1], [D, 2], [G, 2],
-    [E, 1], [E, 1], [E, 2], [E, 1], [E, 1], [E, 2], [E, 1], [G, 1], [C, 1.5], [D, .5], [E, 4],
-    [F, 1], [F, 1], [F, 1.5], [F, .5], [F, 1], [E, 1], [E, 1], [E, .5], [E, .5], [G, 1], [G, 1], [F, 1], [D, 1], [C, 4]
-  ];
-  // one chord root per bar (4 beats), 16 bars, as semitones from C2
-  const BASS = [0, 0, 0, 0, 5, 0, 2, 7, 0, 0, 0, 0, 5, 0, 7, 0];
-  const LOOP_BEATS = 64;
-
-  async function hasFile() {
-    if (fileState !== "unknown") return fileState === "yes";
-    try { const r = await fetch("music.mp3", { method: "HEAD", cache: "no-store" }); fileState = r.ok && /audio/.test(r.headers.get("content-type") || "") ? "yes" : "no"; }
-    catch (_) { fileState = "no"; }
-    return fileState === "yes";
-  }
-  function setup() {
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
-    master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
-    const d = ctx.createDelay(1); d.delayTime.value = .27;
-    const fb = ctx.createGain(); fb.gain.value = .22;
-    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2600;
-    echo = ctx.createGain(); echo.gain.value = .22;
-    echo.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(master);
-    noise = ctx.createBuffer(1, ctx.sampleRate * .3, ctx.sampleRate);
-    const ch = noise.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
-  }
-  function tone(f, t, dur) {                           // bright music-box / glockenspiel voice
-    [[1, "triangle", .16], [2, "sine", .06], [4, "sine", .025]].forEach(([m, type, v]) => {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.type = type; o.frequency.value = f * m;
-      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .01);
-      g.gain.exponentialRampToValueAtTime(.0001, t + Math.max(.35, dur * BEAT * 1.1));
-      o.connect(g); g.connect(master); g.connect(echo); o.start(t); o.stop(t + dur * BEAT * 1.2 + .4);
-    });
-  }
-  function bass(f, t) {
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = "triangle"; o.frequency.value = f;
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.14, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + BEAT * .9);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t + BEAT);
-  }
-  function sleigh(t, accent) {                         // sleigh bells: filtered noise shake
-    const s = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
-    s.buffer = noise; bp.type = "bandpass"; bp.frequency.value = 7500; bp.Q.value = 1.4;
-    g.gain.setValueAtTime(accent ? .22 : .12, t); g.gain.exponentialRampToValueAtTime(.0001, t + .16);
-    s.connect(bp); bp.connect(g); g.connect(master); s.start(t); s.stop(t + .2);
-  }
-  function schedule() {
-    const ahead = ctx.currentTime + .25;
-    while (nextTime < ahead) {                          // melody
-      const [semi, beats] = MELODY[noteIdx];
-      if (semi != null) tone(hz(semi), nextTime, beats);
-      nextTime += beats * BEAT;
-      noteIdx = (noteIdx + 1) % MELODY.length;
-    }
-    while (nextBeat < ahead) {                          // bass "oom-pah" and bells, locked to the same grid
-      const b = beatIdx % LOOP_BEATS, root = BASS[Math.floor(b / 4)], f = C4 / 2 * Math.pow(2, root / 12);
-      bass(b % 2 === 0 ? f : f * 1.5, nextBeat);
-      sleigh(nextBeat, b % 4 === 0); sleigh(nextBeat + BEAT / 2, false);
-      nextBeat += BEAT; beatIdx++;
-    }
-  }
-  function ui() { btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on)); label.textContent = on ? "Әуенді өшіру" : "Әуенді қосу"; }
-  async function start() {
-    if (await hasFile()) {
-      if (!audioEl) { audioEl = new Audio("music.mp3"); audioEl.loop = true; audioEl.volume = .55; }
-      try { await audioEl.play(); on = true; } catch (_) { on = false; toast("Әуенді қосу мүмкін болмады."); }
-      ui(); return;
-    }
-    if (!ctx) setup();
-    await ctx.resume();
-    master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(.85, ctx.currentTime, .15);
-    if (!timer) {
-      nextTime = nextBeat = ctx.currentTime + .1; noteIdx = 0; beatIdx = 0;
-      timer = setInterval(schedule, 60); schedule();
-    }
-    on = true; ui();
-  }
-  function stopAll() {
-    if (audioEl) audioEl.pause();
-    if (ctx) { master.gain.setTargetAtTime(0, ctx.currentTime, .2); setTimeout(() => { if (!on && timer) { clearInterval(timer); timer = null; } }, 800); }
-    on = false; ui();
-  }
-  btn.addEventListener("click", () => on ? stopAll() : start());
+  const audio = new Audio("music.mp3"); audio.loop = true; audio.volume = .5; audio.preload = "none";
+  let on = false;
+  const ui = () => { btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on)); label.textContent = on ? "Әуенді өшіру" : "Әуенді қосу"; };
+  btn.addEventListener("click", async () => {
+    if (on) { audio.pause(); on = false; ui(); return; }
+    try { await audio.play(); on = true; } catch (_) { on = false; toast("Әуенді қосу мүмкін болмады."); }
+    ui();
+  });
+  audio.addEventListener("pause", () => { if (on) { on = false; ui(); } });
   ui();
-  return { start, stop: stopAll };
 })();
 
 /* ---------- boot ---------- */

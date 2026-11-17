@@ -42,3 +42,7 @@
 3. Нажмите **Шақыру** и отправьте ссылку участникам.
 4. Когда все записались, нажмите **Жеребе тарту** (провести жеребьёвку).
 5. Каждый участник открывает свой конверт и видит, кому дарит подарок.
+
+## Музыка
+
+`music.mp3`: «Christmas Eve Music», автор AtlasAudio, с сайта Pixabay (https://pixabay.com/music/christmas-christmas-eve-music-625689/). Используется по [Pixabay Content License](https://pixabay.com/service/license-summary/) как фоновая музыка сайта. Чтобы заменить трек, положите другой файл с тем же именем `music.mp3`.

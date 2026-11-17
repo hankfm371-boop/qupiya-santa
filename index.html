@@ -31,8 +31,8 @@
 *{box-sizing:border-box}
 body{background:var(--night);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
 #snow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
-.card{position:relative;z-index:1;background:var(--bg);border-radius:var(--r-lg);padding:clamp(20px,4vw,34px);padding-top:calc(clamp(20px,4vw,34px) + 14px);box-shadow:0 22px 50px -26px rgba(34,18,61,.55);overflow:hidden}
-.card::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:var(--girih) 0 -13px/20px 20px repeat-x,linear-gradient(var(--ink),var(--ink));opacity:.92}
+.card{position:relative;z-index:1;background:var(--bg);border-radius:var(--r-lg);padding:clamp(20px,4vw,34px);padding-top:calc(clamp(20px,4vw,34px) + 18px);box-shadow:0 22px 50px -26px rgba(34,18,61,.55);overflow:hidden}
+.card::before{content:"";position:absolute;left:0;right:0;top:0;height:18px;background:var(--girih) center/18px 18px repeat-x,linear-gradient(var(--ink),var(--ink))}
 h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:0;text-wrap:balance;margin:0}
 h1{font-size:clamp(32px,6.4vw,46px);line-height:1.05}
 h2{font-size:clamp(26px,4.8vw,34px);line-height:1.1}
@@ -277,26 +277,26 @@ img{max-width:100%}
     <svg viewBox="0 0 1200 120" preserveAspectRatio="xMidYMin slice">
       <path d="M-10 6 Q300 70 600 30 T1210 10" fill="none" stroke="#E3A92B" stroke-width="1.6" opacity=".8"/>
       <!-- Chinese red lantern -->
-      <g class="sway" transform="translate(110 34)"><line x1="0" y1="-14" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><rect x="-7" y="0" width="14" height="5" fill="#E3A92B"/><ellipse cx="0" cy="22" rx="17" ry="18" fill="#D62839"/><path d="M-6 6 Q-12 22 -6 38 M6 6 Q12 22 6 38" stroke="#FF8A7A" stroke-width="1.2" fill="none" opacity=".7"/><rect x="-7" y="38" width="14" height="5" fill="#E3A92B"/><line x1="0" y1="43" x2="0" y2="60" stroke="#E3A92B" stroke-width="3"/></g>
+      <g transform="translate(110 34)"><g class="sway"><line x1="0" y1="-14" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><rect x="-7" y="0" width="14" height="5" fill="#E3A92B"/><ellipse cx="0" cy="22" rx="17" ry="18" fill="#D62839"/><path d="M-6 6 Q-12 22 -6 38 M6 6 Q12 22 6 38" stroke="#FF8A7A" stroke-width="1.2" fill="none" opacity=".7"/><rect x="-7" y="38" width="14" height="5" fill="#E3A92B"/><line x1="0" y1="43" x2="0" y2="60" stroke="#E3A92B" stroke-width="3"/></g></g>
       <!-- Turkish mosaic lamp -->
-      <g class="sway" transform="translate(250 52)"><line x1="0" y1="-26" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><path d="M-4 0 H4 L6 6 H-6Z" fill="#E3A92B"/><circle cx="0" cy="20" r="15" fill="#1C3F8F"/><circle cx="-6" cy="15" r="4" fill="#E3A92B"/><circle cx="6" cy="15" r="4" fill="#D62839"/><circle cx="0" cy="25" r="4" fill="#20B2AA"/><circle cx="-7" cy="26" r="3" fill="#F3A3BC"/><circle cx="7" cy="26" r="3" fill="#F7D774"/><path d="M-5 35 L0 46 L5 35Z" fill="#E3A92B"/></g>
+      <g transform="translate(250 52)"><g class="sway"><line x1="0" y1="-26" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><path d="M-4 0 H4 L6 6 H-6Z" fill="#E3A92B"/><circle cx="0" cy="20" r="15" fill="#1C3F8F"/><circle cx="-6" cy="15" r="4" fill="#E3A92B"/><circle cx="6" cy="15" r="4" fill="#D62839"/><circle cx="0" cy="25" r="4" fill="#20B2AA"/><circle cx="-7" cy="26" r="3" fill="#F3A3BC"/><circle cx="7" cy="26" r="3" fill="#F7D774"/><path d="M-5 35 L0 46 L5 35Z" fill="#E3A92B"/></g></g>
       <!-- Arabic fanous -->
-      <g class="sway" transform="translate(395 50)"><line x1="0" y1="-24" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><path d="M0 0 L-9 9 H9Z" fill="#E3A92B"/><path d="M-11 9 H11 L9 36 H-9Z" fill="#FFD27A" opacity=".9"/><path d="M-11 9 H11 L9 36 H-9Z M-4 9 V36 M4 9 V36 M-11 20 H11" fill="none" stroke="#B97F0E" stroke-width="1.6"/><path d="M-9 36 H9 L0 46Z" fill="#E3A92B"/></g>
+      <g transform="translate(395 50)"><g class="sway"><line x1="0" y1="-24" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><path d="M0 0 L-9 9 H9Z" fill="#E3A92B"/><path d="M-11 9 H11 L9 36 H-9Z" fill="#FFD27A" opacity=".9"/><path d="M-11 9 H11 L9 36 H-9Z M-4 9 V36 M4 9 V36 M-11 20 H11" fill="none" stroke="#B97F0E" stroke-width="1.6"/><path d="M-9 36 H9 L0 46Z" fill="#E3A92B"/></g></g>
       <!-- Japanese chochin -->
-      <g class="sway" transform="translate(540 42)"><line x1="0" y1="-14" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><rect x="-10" y="0" width="20" height="4" fill="#22123D"/><rect x="-14" y="4" width="28" height="34" rx="12" fill="#FFF2DC"/><path d="M-14 12 H14 M-14 20 H14 M-14 28 H14" stroke="#E7C9A0" stroke-width="1"/><circle cx="0" cy="21" r="7" fill="#D62839"/><rect x="-10" y="38" width="20" height="4" fill="#22123D"/></g>
+      <g transform="translate(540 42)"><g class="sway"><line x1="0" y1="-14" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><rect x="-10" y="0" width="20" height="4" fill="#22123D"/><rect x="-14" y="4" width="28" height="34" rx="12" fill="#FFF2DC"/><path d="M-14 12 H14 M-14 20 H14 M-14 28 H14" stroke="#E7C9A0" stroke-width="1"/><circle cx="0" cy="21" r="7" fill="#D62839"/><rect x="-10" y="38" width="20" height="4" fill="#22123D"/></g></g>
       <!-- Korean cheongsachorong -->
-      <g class="sway" transform="translate(690 38)"><line x1="0" y1="-12" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><rect x="-8" y="0" width="16" height="4" fill="#E3A92B"/><path d="M-12 4 H12 L14 32 H-14Z" fill="#2B5FC9"/><rect x="-14" y="10" width="28" height="9" fill="#D62839"/><rect x="-14" y="32" width="28" height="4" fill="#E3A92B"/><line x1="0" y1="36" x2="0" y2="52" stroke="#D62839" stroke-width="3"/></g>
+      <g transform="translate(690 38)"><g class="sway"><line x1="0" y1="-12" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><rect x="-8" y="0" width="16" height="4" fill="#E3A92B"/><path d="M-12 4 H12 L14 32 H-14Z" fill="#2B5FC9"/><rect x="-14" y="10" width="28" height="9" fill="#D62839"/><rect x="-14" y="32" width="28" height="4" fill="#E3A92B"/><line x1="0" y1="36" x2="0" y2="52" stroke="#D62839" stroke-width="3"/></g></g>
       <!-- Persian lantern -->
-      <g class="sway" transform="translate(835 30)"><line x1="0" y1="-12" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><path d="M0 0 C14 10 14 30 0 44 C-14 30 -14 10 0 0Z" fill="#138A8A"/><path d="M0 6 C8 14 8 28 0 38 C-8 28 -8 14 0 6Z" fill="#FFD27A" opacity=".85"/><circle cx="0" cy="48" r="3" fill="#E3A92B"/></g>
+      <g transform="translate(835 30)"><g class="sway"><line x1="0" y1="-12" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><path d="M0 0 C14 10 14 30 0 44 C-14 30 -14 10 0 0Z" fill="#138A8A"/><path d="M0 6 C8 14 8 28 0 38 C-8 28 -8 14 0 6Z" fill="#FFD27A" opacity=".85"/><circle cx="0" cy="48" r="3" fill="#E3A92B"/></g></g>
       <!-- Chinese red lantern -->
-      <g class="sway" transform="translate(975 22)"><line x1="0" y1="-12" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><rect x="-7" y="0" width="14" height="5" fill="#E3A92B"/><ellipse cx="0" cy="22" rx="17" ry="18" fill="#D62839"/><text x="0" y="28" text-anchor="middle" font-size="17" fill="#FFE7A8" font-family="serif">福</text><rect x="-7" y="38" width="14" height="5" fill="#E3A92B"/><line x1="0" y1="43" x2="0" y2="60" stroke="#E3A92B" stroke-width="3"/></g>
+      <g transform="translate(975 22)"><g class="sway"><line x1="0" y1="-12" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><rect x="-7" y="0" width="14" height="5" fill="#E3A92B"/><ellipse cx="0" cy="22" rx="17" ry="18" fill="#D62839"/><text x="0" y="28" text-anchor="middle" font-size="17" fill="#FFE7A8" font-family="serif">福</text><rect x="-7" y="38" width="14" height="5" fill="#E3A92B"/><line x1="0" y1="43" x2="0" y2="60" stroke="#E3A92B" stroke-width="3"/></g></g>
       <!-- Turkish lamp -->
-      <g class="sway" transform="translate(1110 16)"><line x1="0" y1="-10" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><path d="M-4 0 H4 L6 6 H-6Z" fill="#E3A92B"/><circle cx="0" cy="20" r="15" fill="#7A1E48"/><circle cx="-6" cy="15" r="4" fill="#20B2AA"/><circle cx="6" cy="15" r="4" fill="#E3A92B"/><circle cx="0" cy="26" r="4" fill="#F3A3BC"/><path d="M-5 35 L0 46 L5 35Z" fill="#E3A92B"/></g>
+      <g transform="translate(1110 16)"><g class="sway"><line x1="0" y1="-10" x2="0" y2="0" stroke="#E3A92B" stroke-width="1.5"/><path d="M-4 0 H4 L6 6 H-6Z" fill="#E3A92B"/><circle cx="0" cy="20" r="15" fill="#7A1E48"/><circle cx="-6" cy="15" r="4" fill="#20B2AA"/><circle cx="6" cy="15" r="4" fill="#E3A92B"/><circle cx="0" cy="26" r="4" fill="#F3A3BC"/><path d="M-5 35 L0 46 L5 35Z" fill="#E3A92B"/></g></g>
     </svg>
   </div>
   <div class="moon" aria-hidden="true">
-    <svg viewBox="0 0 100 100"><defs><mask id="cres"><rect width="100" height="100" fill="#fff"/><circle cx="64" cy="40" r="38" fill="#000"/></mask></defs>
-      <circle cx="50" cy="50" r="44" fill="#FFF4D6" mask="url(#cres)" style="filter:drop-shadow(0 0 18px rgba(255,220,140,.6))"/>
+    <svg viewBox="0 0 100 100"><defs><mask id="cres" maskUnits="userSpaceOnUse" x="-20" y="-20" width="140" height="140"><rect x="-20" y="-20" width="140" height="140" fill="#fff"/><circle cx="64" cy="40" r="38" fill="#000"/></mask></defs>
+      <circle cx="50" cy="50" r="58" fill="#FFE7A8" opacity=".12"/><circle cx="50" cy="50" r="44" fill="#FFF4D6" mask="url(#cres)"/>
       <path d="M82 62 l3.2 8.6 9.2.4-7.2 5.7 2.5 8.9-7.7-5.1-7.7 5.1 2.5-8.9-7.2-5.7 9.2-.4z" fill="#FFE7A8"/>
     </svg>
   </div>

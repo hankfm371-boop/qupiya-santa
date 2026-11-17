@@ -56,6 +56,7 @@ const S = {
   editGame: false, creating: false, editProfile: false, draftPhoto: undefined, draftHost: undefined,
   opened: false, filter: "all", confirm: null, armRemove: null, busy: false, invite: false, cta: "go"
 };
+let WANT_NEW = params.get("new") === "1";
 const isOwner = () => !!(S.uid && S.game && S.game.hostUid === S.uid);
 const isOpen = () => S.game && S.game.status !== "drawn";
 const me = () => S.mine;
@@ -202,6 +203,20 @@ function confirmHTML(id, text, yes) { return `<div class="confirm"><p>${esc(text
 const signinHTML = text => `<p class="lead">${esc(text)}</p><button type="button" class="gbtn" data-signin="1">${GOOGLE}Google арқылы кіру</button>`;
 
 function stageHTML() {
+  const r = stageCore();
+  if (S.gid && S.game && S.uid && S.mineReady) {
+    if (isOwner()) {
+      r.h += `<div class="stack" style="border-top:1.5px solid var(--line);padding-top:18px;margin-top:6px"><h3>Ойынды басқару</h3>` +
+        (S.confirm === "delete"
+          ? confirmHTML("delete", "«" + S.game.name + "» ойыны, барлық қатысушы мен жеребе толық өшіріледі. Бұл әрекетті қайтару мүмкін емес.", "Иә, өшіру")
+          : `<div class="btn-row"><button type="button" class="btn btn-ink" id="btnNewGame">+ Жаңа ойын құру</button><button type="button" class="btn btn-danger" id="btnDelGame">Ойынды өшіру</button></div>`) + `</div>`;
+    } else {
+      r.h += `<div class="btn-row"><button type="button" class="btn btn-ghost" id="btnNewGame">+ Өз ойынымды құру</button></div>`;
+    }
+  }
+  return r;
+}
+function stageCore() {
   if (S.setup) return { t: "Сайт әлі бапталмаған", h: `<div class="note warn">Firebase баптаулары толтырылмаған. <b>firebase-config.js</b> файлына өз Firebase жобаңыздың деректерін қойыңыз. Толық нұсқаулық README.md файлында.</div>` };
   if (!S.authReady) return { t: "Жүктелуде…", h: `<p class="muted">Сәл күтіңіз.</p>` };
   if (!S.gid) {
@@ -533,6 +548,8 @@ document.addEventListener("click", async e => {
     $(!$("#createSec").hidden ? "#createSec" : !$("#joinSec").hidden ? "#joinSec" : "#statusSec").scrollIntoView({ behavior: "smooth" }); return;
   }
   if (id === "btnNew") { startCreate(); return; }
+  if (id === "btnNewGame") { location.href = location.pathname + "?new=1"; return; }
+  if (id === "btnDelGame") { S.confirm = "delete"; render(); return; }
   if (id === "btnJoin" || id === "btnAddMe" || id === "btnEditMe" || b.dataset.edit) { startJoin(); return; }
   if (id === "btnDraw") { S.confirm = "draw"; render(); return; }
   if (id === "btnRedraw") { S.confirm = "redraw"; render(); return; }
@@ -554,7 +571,8 @@ document.addEventListener("click", async e => {
         const bt = writeBatch(db); await wipePairs(bt);
         (await getDocs(collection(db, "games", S.gid, "members"))).forEach(d => bt.delete(d.ref));
         bt.delete(doc(db, "games", S.gid)); await bt.commit();
-        forgetGame(S.gid); toast("Ойын өшірілді"); setTimeout(() => location.href = location.pathname, 900);
+        forgetGame(S.gid); S.confirm = null; stop("game"); stop("members"); stop("mine"); stop("pair");
+        toast("Ойын өшірілді. Жаңа ойын құра аласыз."); setTimeout(() => location.href = location.pathname + "?new=1", 1100);
       } catch (err) { toast(errMsg(err)); } render(); return;
     }
   }
@@ -597,6 +615,7 @@ if (!S.setup) {
       S.user = u; S.uid = u ? u.uid : null; S.authReady = true;
       S.editProfile = false; S.editGame = false; S.creating = false; S.confirm = null;
       subscribeUser(); syncMembers(); render();
+      if (WANT_NEW && S.uid && !S.gid) { WANT_NEW = false; history.replaceState(null, "", location.pathname); startCreate(); }
     });
   } catch (e) { S.setup = true; render(); }
 }
